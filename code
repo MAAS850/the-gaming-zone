@@ -1,0 +1,1963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- @section: head -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE GAMING ZONE — Play Original Browser Games</title>
+<meta name="description" content="THE GAMING ZONE is a futuristic browser gaming portal. Discover, favorite and play original browser games like Neon Serpent — compete on leaderboards and level up your profile.">
+<meta property="og:title" content="THE GAMING ZONE — Play Original Browser Games">
+<meta property="og:description" content="Discover and play original browser games inside a futuristic gaming portal. Play. Compete. Have fun.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        void: '#05070d',
+        navy: '#0a0f1e',
+        navy2: '#0d1428',
+        neon: '#22d3ee',
+        neonblue: '#3b82f6',
+      },
+      fontFamily: {
+        display: ['Orbitron', 'sans-serif'],
+        body: ['Rajdhani', 'sans-serif'],
+      },
+      boxShadow: {
+        glow: '0 0 18px rgba(34,211,238,0.35)',
+        glowsm: '0 0 10px rgba(34,211,238,0.25)',
+      }
+    }
+  }
+}
+</script>
+<style>
+  html{scroll-behavior:smooth}
+  body{background:#05070d;color:#e2e8f0;font-family:'Rajdhani',sans-serif}
+  .font-display{letter-spacing:.04em}
+  .neon-text{text-shadow:0 0 14px rgba(34,211,238,.6)}
+  .card-glow{transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease}
+  .card-glow:hover{transform:translateY(-4px);border-color:rgba(34,211,238,.6);box-shadow:0 0 22px rgba(34,211,238,.25)}
+  .btn-neon{background:linear-gradient(90deg,#0891b2,#2563eb);transition:box-shadow .2s ease,filter .2s ease}
+  .btn-neon:hover{box-shadow:0 0 22px rgba(34,211,238,.5);filter:brightness(1.1)}
+  .grid-bg{background-image:linear-gradient(rgba(34,211,238,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,.05) 1px,transparent 1px);background-size:44px 44px}
+  .page{display:none;animation:fadein .35s ease}
+  .page.active{display:block}
+  @keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .heart-btn.fav svg{fill:#f43f5e;stroke:#f43f5e}
+  canvas{touch-action:none}
+  ::selection{background:#22d3ee;color:#05070d}
+</style>
+</head>
+<body class="antialiased">
+
+<!-- @section: nav -->
+<header class="sticky top-0 z-50 bg-void/90 backdrop-blur border-b border-cyan-500/20">
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between" aria-label="Main navigation">
+    <a href="#/home" class="flex items-center gap-2.5 group">
+      <span class="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-glowsm">
+        <svg class="w-5 h-5 text-void" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4M8 10v4"/><circle cx="15.5" cy="11" r="0.5" fill="currentColor"/><circle cx="18" cy="13.5" r="0.5" fill="currentColor"/><path d="M17.5 5H6.5a4.5 4.5 0 0 0-4.4 5.4l1 5A4.5 4.5 0 0 0 7.5 19h9a4.5 4.5 0 0 0 4.4-3.6l1-5A4.5 4.5 0 0 0 17.5 5z"/></svg>
+      </span>
+      <span class="font-display font-900 font-bold text-sm sm:text-base tracking-widest text-white">THE GAMING <span class="text-cyan-400 neon-text">ZONE</span></span>
+    </a>
+    <ul class="hidden md:flex items-center gap-7 text-sm font-semibold uppercase tracking-wider">
+      <li><a href="#/home" class="nav-link text-slate-300 hover:text-cyan-400 transition">Home</a></li>
+      <li><a id="navGamesBtn" href="#/games" class="nav-link text-slate-300 hover:text-cyan-400 transition">GAMES</a></li>
+      <li><button id="navFavBtn" type="button" onclick="(function(){try{var cur=document.querySelector('.page.active');var f=document.getElementById('page-favorites');if(!f){console.error('NAV: missing #page-favorites');return;}if(cur&&cur!==f){cur.classList.remove('active');cur.classList.add('hidden');}f.classList.remove('hidden');f.classList.add('active');try{renderFavs();}catch(err){console.error('NAV: renderFavs error:',err);}document.querySelectorAll('.nav-link').forEach(function(a){var t=(a.getAttribute('href')||'').replace('#/','');a.classList.toggle('text-cyan-400',t==='favorites');a.classList.toggle('text-slate-300',t!=='favorites');});window.scrollTo({top:0});}catch(err){console.error('NAV ERROR:',err);}})();return false;" class="nav-link text-slate-300 hover:text-cyan-400 transition">Favorites</button></li>
+      <li><button id="navProfileBtn" type="button" onclick="(function(){try{var cur=document.querySelector('.page.active');var p=document.getElementById('page-profile');if(!p){console.error('NAV: missing #page-profile');return;}if(cur&&cur!==p){cur.classList.remove('active');cur.classList.add('hidden');}p.classList.remove('hidden');p.classList.add('active');try{renderProfile();}catch(err){console.error('NAV: renderProfile error:',err);}document.querySelectorAll('.nav-link').forEach(function(a){var t=(a.getAttribute('href')||'').replace('#/','');a.classList.toggle('text-cyan-400',t==='profile');a.classList.toggle('text-slate-300',t!=='profile');});window.scrollTo({top:0});}catch(err){console.error('NAV ERROR:',err);}})();return false;" class="nav-link text-slate-300 hover:text-cyan-400 transition">Profile</button></li>
+    </ul>
+    <a href="#/games" class="hidden md:inline-block btn-neon text-void font-bold text-sm px-5 py-2 rounded-lg bg-gradient-to-r !important" style="color:#05070d">PLAY NOW</a>
+    <button id="menuBtn" class="md:hidden p-2 text-cyan-400" aria-label="Open menu" aria-expanded="false">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </nav>
+  <div id="mobileMenu" class="hidden md:hidden border-t border-cyan-500/20 bg-navy px-4 py-4">
+    <ul class="flex flex-col gap-1 text-sm font-semibold uppercase tracking-wider">
+      <li><a href="#/home" class="block py-2.5 px-3 rounded-lg hover:bg-cyan-500/10 hover:text-cyan-400">Home</a></li>
+      <li><a href="#/games" class="block py-2.5 px-3 rounded-lg hover:bg-cyan-500/10 hover:text-cyan-400">Games</a></li>
+      <li><a href="#/favorites" class="block py-2.5 px-3 rounded-lg hover:bg-cyan-500/10 hover:text-cyan-400">Favorites</a></li>
+      <li><a href="#/leaderboard" class="block py-2.5 px-3 rounded-lg hover:bg-cyan-500/10 hover:text-cyan-400">Leaderboard</a></li>
+      <li><a href="#/profile" class="block py-2.5 px-3 rounded-lg hover:bg-cyan-500/10 hover:text-cyan-400">Profile</a></li>
+      <li><a href="#/settings" class="block py-2.5 px-3 rounded-lg hover:bg-cyan-500/10 hover:text-cyan-400">Settings</a></li>
+      <li><a href="#/games" class="btn-neon mt-2 block text-center text-void font-bold px-5 py-2.5 rounded-lg" style="color:#05070d">PLAY NOW</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="app">
+
+<!-- @section: hero -->
+<section id="page-home" class="page">
+  <div class="relative overflow-hidden grid-bg">
+    <div class="absolute inset-0 bg-gradient-to-b from-navy via-void/60 to-void"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 md:py-28 flex flex-col lg:flex-row items-center gap-12">
+      <div class="flex-1 text-center lg:text-left">
+        <p class="inline-block text-xs font-bold tracking-[0.3em] text-cyan-400 border border-cyan-500/40 rounded-full px-4 py-1.5 mb-6 bg-cyan-500/5">NEXT-GEN BROWSER GAMING</p>
+        <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight">THE GAMING <span class="text-cyan-400 neon-text">ZONE</span></h1>
+        <p class="font-display text-lg sm:text-2xl tracking-[0.35em] text-slate-300 mt-4">PLAY. COMPETE. HAVE FUN.</p>
+        <p class="text-slate-400 text-lg mt-6 max-w-xl mx-auto lg:mx-0">Discover and play original browser games built right into THE GAMING ZONE. No downloads, no installs — jump straight into neon arenas, race futuristic circuits and climb the leaderboards.</p>
+        <div class="mt-9 flex flex-wrap justify-center lg:justify-start gap-4">
+          <a href="#/games" class="btn-neon font-display font-bold text-base px-9 py-4 rounded-xl text-void tracking-widest" style="color:#05070d">▶ PLAY NOW</a>
+          <a href="#/leaderboard" class="border border-cyan-500/50 text-cyan-300 font-display font-bold px-8 py-4 rounded-xl tracking-widest hover:bg-cyan-500/10 transition">VIEW LEADERBOARD</a>
+        </div>
+      </div>
+      <div class="flex-1 w-full max-w-xl">
+        <div class="relative rounded-2xl border border-cyan-500/30 shadow-glow overflow-hidden">
+          <svg viewBox="0 0 640 400" class="w-full block" role="img" aria-label="Futuristic neon game arena artwork">
+            <defs>
+              <linearGradient id="hg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0a0f1e"/><stop offset="1" stop-color="#020617"/></linearGradient>
+              <linearGradient id="hg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#3b82f6"/></linearGradient>
+            </defs>
+            <rect width="640" height="400" fill="url(#hg1)"/>
+            <g stroke="#22d3ee" stroke-opacity="0.18">
+              <path d="M0 400 L200 160 H440 L640 400" fill="none"/><path d="M80 400 L240 200 H400 L560 400" fill="none"/>
+              <path d="M-40 320 H680"/><path d="M-40 360 H680"/>
+            </g>
+            <ellipse cx="320" cy="360" rx="260" ry="42" fill="url(#hg2)" opacity="0.15"/>
+            <polygon points="320,120 420,170 320,220 220,170" fill="none" stroke="#22d3ee" stroke-width="2.5"/>
+            <polygon points="320,150 375,177 320,204 265,177" fill="#22d3ee" opacity="0.25"/>
+            <g fill="#22d3ee"><circle cx="140" cy="110" r="4"/><circle cx="510" cy="90" r="5"/><circle cx="480" cy="250" r="3"/><circle cx="90" cy="250" r="3"/></g>
+            <g fill="#3b82f6" opacity="0.8"><rect x="40" y="60" width="6" height="60"/><rect x="594" y="80" width="6" height="80"/></g>
+            <text x="320" y="300" text-anchor="middle" font-family="Orbitron" font-weight="900" font-size="26" fill="#22d3ee" opacity="0.9">ENTER THE ZONE</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- @section: featured -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-14">
+    <div class="flex items-end justify-between mb-7">
+      <h2 class="font-display text-2xl sm:text-3xl font-bold text-white">FEATURED <span class="text-cyan-400">GAMES</span></h2>
+      <a href="#/games" class="text-cyan-400 hover:text-cyan-300 text-sm font-semibold uppercase tracking-wider">View all →</a>
+    </div>
+    <div class="grid md:grid-cols-2 gap-7">
+      <!-- featured card 1 -->
+      <article class="card-glow rounded-2xl border border-slate-700/60 bg-navy overflow-hidden">
+        <a href="#/game/neon-serpent" class="block">
+          <svg viewBox="0 0 400 225" class="w-full block" role="img" aria-label="Neon Serpent game artwork"><defs><linearGradient id="t1" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#062a3a"/><stop offset="1" stop-color="#020617"/></linearGradient></defs><rect width="400" height="225" fill="url(#t1)"/><g stroke="#22d3ee" stroke-opacity="0.15"><path d="M0 40h400M0 90h400M0 140h400M0 190h400M60 0v225M140 0v225M220 0v225M300 0v225"/></g><polyline points="80,160 80,90 180,90 180,140 260,140 260,60 330,60" fill="none" stroke="#22d3ee" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><circle cx="330" cy="60" r="10" fill="#f43f5e"/><circle cx="330" cy="60" r="18" fill="none" stroke="#f43f5e" stroke-opacity="0.4"/><text x="26" y="204" font-family="Orbitron" font-weight="700" font-size="15" fill="#22d3ee">NEON SERPENT</text></svg>
+        </a>
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold tracking-widest text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 rounded-full px-3 py-1">ARCADE</span>
+            <span class="flex items-center gap-1 text-amber-400 text-sm font-semibold">★ 4.9</span>
+          </div>
+          <h3 class="font-display text-xl font-bold text-white mb-2"><a href="#/game/neon-serpent" class="hover:text-cyan-300">NEON SERPENT</a></h3>
+          <p class="text-slate-400 mb-5">Control a glowing serpent, collect energy and survive as long as possible.</p>
+          <div class="flex items-center gap-3">
+            <a href="#/play/neon-serpent" class="btn-neon text-void font-bold px-6 py-2.5 rounded-lg tracking-wider" style="color:#05070d">▶ PLAY</a>
+            <button class="heart-btn fav-toggle border border-slate-600 rounded-lg p-2.5 hover:border-rose-500 transition" data-id="neon-serpent" aria-label="Add Neon Serpent to favorites"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.1-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></button>
+          </div>
+        </div>
+      </article>
+      <!-- featured card 2 -->
+      <article class="card-glow rounded-2xl border border-slate-700/60 bg-navy overflow-hidden">
+        <a href="#/game/neon-circuit" class="block">
+          <svg viewBox="0 0 400 225" class="w-full block" role="img" aria-label="Neon Circuit game artwork"><defs><linearGradient id="t2" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#150a33"/><stop offset="1" stop-color="#020617"/></linearGradient></defs><rect width="400" height="225" fill="url(#t2)"/><g stroke="#818cf8" stroke-opacity="0.2"><path d="M0 190 L140 120 H260 L400 190" fill="none" stroke-width="26" stroke="#312e81"/><path d="M0 190 L140 120 H260 L400 190" fill="none" stroke-width="2" stroke-dasharray="10 8"/></g><path d="M110 150 h70 v-14 h32 v-30 h46" fill="none" stroke="#a78bfa" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="258" cy="106" r="5" fill="#22d3ee"/><g fill="#c4b5fd" opacity="0.6"><rect x="30" y="40" width="5" height="46"/><rect x="370" y="55" width="5" height="56"/></g><text x="26" y="204" font-family="Orbitron" font-weight="700" font-size="15" fill="#a78bfa">NEON CIRCUIT</text></svg>
+        </a>
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold tracking-widest text-violet-400 bg-violet-500/10 border border-violet-500/30 rounded-full px-3 py-1">RACING</span>
+            <span class="flex items-center gap-1 text-amber-400 text-sm font-semibold">★ 4.7</span>
+          </div>
+          <h3 class="font-display text-xl font-bold text-white mb-2"><a href="#/game/neon-circuit" class="hover:text-violet-300">NEON CIRCUIT</a></h3>
+          <p class="text-slate-400 mb-5">Race through futuristic neon tracks, beat your best times and master difficult tracks.</p>
+          <div class="flex items-center gap-3">
+            <a href="#/play/neon-circuit" class="btn-neon text-void font-bold px-6 py-2.5 rounded-lg tracking-wider" style="color:#05070d">▶ PLAY</a>
+            <button class="heart-btn fav-toggle border border-slate-600 rounded-lg p-2.5 hover:border-rose-500 transition" data-id="neon-circuit" aria-label="Add Neon Circuit to favorites"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.1-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- @section: popular -->
+  <div class="bg-navy border-y border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-14">
+      <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mb-7">POPULAR <span class="text-cyan-400">GAMES</span></h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" id="homePopular">
+        <article class="card-glow rounded-xl border border-slate-700/60 bg-navy2 overflow-hidden">
+          <a href="#/game/cosmic-wave"><svg viewBox="0 0 400 200" class="w-full block" role="img" aria-label="Cosmic Wave artwork"><rect width="400" height="200" fill="#040915"/><circle cx="200" cy="220" r="150" fill="none" stroke="#22d3ee" stroke-opacity="0.3" stroke-width="2"/><polygon points="200,70 220,120 200,160 180,120" fill="#22d3ee"/><g fill="#e2e8f0"><circle cx="70" cy="40" r="1.6"/><circle cx="330" cy="60" r="1.6"/><circle cx="120" cy="150" r="1.4"/><circle cx="300" cy="160" r="1.4"/></g></svg></a>
+          <div class="p-4"><div class="flex justify-between items-center mb-1"><span class="text-[10px] font-bold tracking-widest text-cyan-400">ARCADE</span><span class="text-amber-400 text-xs font-semibold">★ 4.8</span></div><h3 class="font-display font-bold text-white"><a href="#/game/cosmic-wave" class="hover:text-cyan-300">COSMIC WAVE</a></h3></div>
+        </article>
+        <article class="card-glow rounded-xl border border-slate-700/60 bg-navy2 overflow-hidden">
+          <a href="#/game/neon-flight"><svg viewBox="0 0 400 200" class="w-full block" role="img" aria-label="Neon Flight artwork"><rect width="400" height="200" fill="#071021"/><ellipse cx="200" cy="200" rx="200" ry="60" fill="#22d3ee" opacity="0.08"/><ellipse cx="200" cy="200" rx="130" ry="38" fill="none" stroke="#22d3ee" stroke-opacity="0.4"/><path d="M200 60 l26 60 -26 24 -26 -24 z" fill="#3b82f6"/><g stroke="#22d3ee" stroke-opacity="0.3"><path d="M0 170 Q200 130 400 170" fill="none"/></g><g fill="#f59e0b"><circle cx="110" cy="100" r="7" fill="none" stroke="#f59e0b" stroke-width="2"/><circle cx="290" cy="100" r="7" fill="none" stroke="#f59e0b" stroke-width="2"/></g></svg></a>
+          <div class="p-4"><div class="flex justify-between items-center mb-1"><span class="text-[10px] font-bold tracking-widest text-cyan-400">ARCADE</span><span class="text-amber-400 text-xs font-semibold">★ 4.6</span></div><h3 class="font-display font-bold text-white"><a href="#/game/neon-flight" class="hover:text-cyan-300">NEON FLIGHT</a></h3></div>
+        </article>
+        <article class="card-glow rounded-xl border border-slate-700/60 bg-navy2 overflow-hidden">
+          <a href="#/game/blockworld"><svg viewBox="0 0 400 200" class="w-full block" role="img" aria-label="Blockworld artwork"><rect width="400" height="200" fill="#0a1420"/><g><rect x="60" y="110" width="40" height="40" fill="#3b82f6"/><rect x="100" y="70" width="40" height="80" fill="#2563eb"/><rect x="140" y="110" width="40" height="40" fill="#1d4ed8"/><rect x="240" y="90" width="40" height="60" fill="#0891b2"/><rect x="280" y="120" width="40" height="30" fill="#22d3ee"/><rect x="180" y="140" width="160" height="10" fill="#334155"/></g><g fill="#7dd3fc" opacity="0.7"><rect x="108" y="80" width="8" height="8"/><rect x="126" y="80" width="8" height="8"/><rect x="248" y="100" width="8" height="8"/></g></svg></a>
+          <div class="p-4"><div class="flex justify-between items-center mb-1"><span class="text-[10px] font-bold tracking-widest text-emerald-400">ADVENTURE</span><span class="text-amber-400 text-xs font-semibold">★ 4.8</span></div><h3 class="font-display font-bold text-white"><a href="#/game/blockworld" class="hover:text-cyan-300">BLOCKWORLD</a></h3></div>
+        </article>
+        <article class="card-glow rounded-xl border border-slate-700/60 bg-navy2 overflow-hidden">
+          <a href="#/game/highway-escape"><svg viewBox="0 0 400 200" class="w-full block" role="img" aria-label="Highway Escape artwork"><rect width="400" height="200" fill="#0b0b14"/><polygon points="120,0 280,0 400,200 0,200" fill="#171725"/><g stroke="#facc15" stroke-dasharray="14 12" stroke-width="4"><path d="M200 0 V200"/></g><g stroke="#e2e8f0" stroke-opacity="0.25"><path d="M120 0 L0 200M280 0 L400 200"/></g><rect x="182" y="110" width="36" height="60" rx="8" fill="#22d3ee"/><rect x="190" y="122" width="20" height="20" rx="4" fill="#0e7490"/><g fill="#3b82f6"><rect x="160" y="30" width="28" height="44" rx="6"/><rect x="212" y="20" width="28" height="44" rx="6"/></g></svg></a>
+          <div class="p-4"><div class="flex justify-between items-center mb-1"><span class="text-[10px] font-bold tracking-widest text-rose-400">ACTION</span><span class="text-amber-400 text-xs font-semibold">★ 4.5</span></div><h3 class="font-display font-bold text-white"><a href="#/game/highway-escape" class="hover:text-cyan-300">HIGHWAY ESCAPE</a></h3></div>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <!-- @section: new games + top players -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-14 grid lg:grid-cols-3 gap-10">
+    <div class="lg:col-span-2">
+      <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mb-7">NEW <span class="text-cyan-400">GAMES</span></h2>
+      <div class="space-y-4">
+        <a href="#/game/craftverse" class="card-glow flex items-center gap-5 rounded-xl border border-slate-700/60 bg-navy p-4">
+          <svg viewBox="0 0 120 80" class="w-28 h-20 rounded-lg shrink-0" role="img" aria-label="Craftverse artwork"><rect width="120" height="80" fill="#0a1420"/><rect x="20" y="40" width="20" height="20" fill="#22c55e"/><rect x="40" y="24" width="20" height="36" fill="#a16207"/><rect x="60" y="40" width="20" height="20" fill="#3b82f6"/><rect x="80" y="48" width="20" height="12" fill="#f59e0b"/><rect x="10" y="60" width="100" height="8" fill="#334155"/></svg>
+          <div><div class="flex items-center gap-3 mb-1"><h3 class="font-display font-bold text-white hover:text-cyan-300">CRAFTVERSE</h3><span class="text-[10px] font-bold tracking-widest text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">NEW</span></div><p class="text-slate-400 text-sm">Collect resources, craft objects and build your own small world.</p><span class="text-amber-400 text-xs font-semibold">★ 4.4 · SIMULATION</span></div>
+        </a>
+        <a href="#/game/cosmic-wave" class="card-glow flex items-center gap-5 rounded-xl border border-slate-700/60 bg-navy p-4">
+          <svg viewBox="0 0 120 80" class="w-28 h-20 rounded-lg shrink-0" role="img" aria-label="Cosmic Wave artwork"><rect width="120" height="80" fill="#040915"/><polygon points="60,14 70,44 60,64 50,44" fill="#22d3ee"/><g fill="#e2e8f0"><circle cx="24" cy="18" r="1.4"/><circle cx="96" cy="24" r="1.4"/><circle cx="30" cy="62" r="1.2"/></g></svg>
+          <div><div class="flex items-center gap-3 mb-1"><h3 class="font-display font-bold text-white hover:text-cyan-300">COSMIC WAVE</h3><span class="text-[10px] font-bold tracking-widest text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">NEW</span></div><p class="text-slate-400 text-sm">Control a futuristic spacecraft and survive increasingly difficult waves of obstacles.</p><span class="text-amber-400 text-xs font-semibold">★ 4.8 · ARCADE</span></div>
+        </a>
+        <a href="#/game/neon-serpent" class="card-glow flex items-center gap-5 rounded-xl border border-slate-700/60 bg-navy p-4">
+          <svg viewBox="0 0 120 80" class="w-28 h-20 rounded-lg shrink-0" role="img" aria-label="Neon Serpent artwork"><rect width="120" height="80" fill="#062a3a"/><polyline points="24,58 24,30 56,30 56,46 88,46 88,22" fill="none" stroke="#22d3ee" stroke-width="8" stroke-linecap="round"/><circle cx="88" cy="22" r="5" fill="#f43f5e"/></svg>
+          <div><div class="flex items-center gap-3 mb-1"><h3 class="font-display font-bold text-white hover:text-cyan-300">NEON SERPENT</h3><span class="text-[10px] font-bold tracking-widest text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">NEW</span></div><p class="text-slate-400 text-sm">Control a glowing serpent, collect energy and survive as long as possible.</p><span class="text-amber-400 text-xs font-semibold">★ 4.9 · ARCADE</span></div>
+        </a>
+      </div>
+    </div>
+    <aside>
+      <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mb-7">TOP <span class="text-cyan-400">PLAYERS</span></h2>
+      <ol class="space-y-3" id="homeTopPlayers">
+        <li class="flex items-center gap-4 rounded-xl border border-amber-500/40 bg-navy p-4"><span class="font-display font-black text-amber-400 text-xl w-8">1</span><span class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center font-bold text-void">NX</span><div><p class="font-bold text-white">NexusX</p><p class="text-xs text-slate-400">12,480 pts · Neon Serpent</p></div></li>
+        <li class="flex items-center gap-4 rounded-xl border border-slate-400/40 bg-navy p-4"><span class="font-display font-black text-slate-300 text-xl w-8">2</span><span class="w-10 h-10 rounded-full bg-gradient-to-br from-slate-300 to-slate-500 flex items-center justify-center font-bold text-void">VG</span><div><p class="font-bold text-white">VoidGamer</p><p class="text-xs text-slate-400">11,950 pts · Neon Serpent</p></div></li>
+        <li class="flex items-center gap-4 rounded-xl border border-orange-700/50 bg-navy p-4"><span class="font-display font-black text-orange-500 text-xl w-8">3</span><span class="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-red-600 flex items-center justify-center font-bold text-void">PH</span><div><p class="font-bold text-white">PixelHawk</p><p class="text-xs text-slate-400">10,320 pts · Neon Serpent</p></div></li>
+        <li class="flex items-center gap-4 rounded-xl border border-slate-700/60 bg-navy p-4"><span class="font-display font-black text-cyan-400 text-xl w-8">4</span><span class="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center font-bold text-void">GL</span><div><p class="font-bold text-white">GlitchLord</p><p class="text-xs text-slate-400">9,870 pts · Neon Serpent</p></div></li>
+      </ol>
+      <a href="#/leaderboard" class="mt-5 block text-center border border-cyan-500/50 text-cyan-300 font-display font-bold px-6 py-3 rounded-xl tracking-widest hover:bg-cyan-500/10 transition">FULL LEADERBOARD</a>
+    </aside>
+  </div>
+</section>
+
+<!-- @section: games -->
+<section id="page-games" class="page">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+    <h1 class="font-display text-3xl sm:text-4xl font-black text-white mb-2">GAME <span class="text-cyan-400 neon-text">LIBRARY</span></h1>
+    <p class="text-slate-400 mb-8">Browse the full catalog. Search, filter and launch any game instantly.</p>
+
+    <!-- featured banner -->
+    <div class="mb-10 rounded-2xl border border-cyan-500/30 bg-gradient-to-r from-navy2 to-navy p-6 flex flex-col sm:flex-row items-center gap-6">
+      <svg viewBox="0 0 160 90" class="w-40 rounded-lg shrink-0" role="img" aria-label="Featured game Neon Serpent artwork"><rect width="160" height="90" fill="#062a3a"/><polyline points="30,68 30,36 70,36 70,52 112,52 112,26" fill="none" stroke="#22d3ee" stroke-width="9" stroke-linecap="round"/><circle cx="112" cy="26" r="6" fill="#f43f5e"/></svg>
+      <div class="flex-1 text-center sm:text-left"><p class="text-xs font-bold tracking-[0.3em] text-cyan-400 mb-1">FEATURED GAME</p><h2 class="font-display text-xl font-bold text-white mb-1">NEON SERPENT</h2><p class="text-slate-400 text-sm">Our flagship playable title. Fully playable right now in your browser.</p></div>
+      <a href="#/play/neon-serpent" class="btn-neon text-void font-bold px-7 py-3 rounded-xl tracking-wider" style="color:#05070d">▶ PLAY NOW</a>
+    </div>
+
+    <!-- search + filters -->
+    <div class="flex flex-col lg:flex-row gap-4 mb-4">
+      <div class="relative flex-1">
+        <svg class="w-5 h-5 text-slate-500 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="m20 20-3.5-3.5"/></svg>
+        <input id="gameSearch" type="search" placeholder="Search games by title, category or description…" class="w-full bg-navy border border-slate-700 rounded-xl pl-12 pr-4 py-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:shadow-glowsm transition">
+      </div>
+      <select id="gameSort" class="bg-navy border border-slate-700 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-cyan-500" aria-label="Sort games">
+        <option value="rating">Sort: Top Rated</option>
+        <option value="title">Sort: A – Z</option>
+      </select>
+    </div>
+    <div class="flex flex-wrap gap-2 mb-8" id="categoryFilters">
+      <button class="filter-btn active px-4 py-2 rounded-full text-sm font-semibold border transition bg-cyan-500/15 border-cyan-500/60 text-cyan-300" data-cat="all">All</button>
+      <button class="filter-btn px-4 py-2 rounded-full text-sm font-semibold border border-slate-700 text-slate-400 hover:border-cyan-500/50 transition" data-cat="Action">Action</button>
+      <button class="filter-btn px-4 py-2 rounded-full text-sm font-semibold border border-slate-700 text-slate-400 hover:border-cyan-500/50 transition" data-cat="Racing">Racing</button>
+      <button class="filter-btn px-4 py-2 rounded-full text-sm font-semibold border border-slate-700 text-slate-400 hover:border-cyan-500/50 transition" data-cat="Arcade">Arcade</button>
+      <button class="filter-btn px-4 py-2 rounded-full text-sm font-semibold border border-slate-700 text-slate-400 hover:border-cyan-500/50 transition" data-cat="Adventure">Adventure</button>
+      <button class="filter-btn px-4 py-2 rounded-full text-sm font-semibold border border-slate-700 text-slate-400 hover:border-cyan-500/50 transition" data-cat="Puzzle">Puzzle</button>
+      <button class="filter-btn px-4 py-2 rounded-full text-sm font-semibold border border-slate-700 text-slate-400 hover:border-cyan-500/50 transition" data-cat="Simulation">Simulation</button>
+      <button class="filter-btn px-4 py-2 rounded-full text-sm font-semibold border border-slate-700 text-slate-400 hover:border-cyan-500/50 transition" data-cat="Multiplayer">Multiplayer</button>
+      <button class="filter-btn px-4 py-2 rounded-full text-sm font-semibold border border-slate-700 text-slate-400 hover:border-cyan-500/50 transition" data-cat="Casual">Casual</button>
+    </div>
+
+    <h2 class="font-display text-xl font-bold text-white mb-5">ALL GAMES <span class="text-slate-500 text-sm font-body font-semibold" id="gameCount">(14)</span></h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="gamesGrid">
+
+      <!-- cards: blockworld -->
+      <article class="game-card card-glow rounded-xl border border-slate-700/60 bg-navy overflow-hidden flex flex-col" data-title="blockworld block world sandbox" data-cat="Adventure" data-desc="Explore a block-based world, collect resources and build your own structures." data-rating="4.8">
+        <a href="#/game/blockworld"><svg viewBox="0 0 400 200" class="w-full block" role="img" aria-label="Blockworld thumbnail"><rect width="400" height="200" fill="#0a1420"/><rect x="60" y="110" width="40" height="40" fill="#3b82f6"/><rect x="100" y="70" width="40" height="80" fill="#2563eb"/><rect x="140" y="110" width="40" height="40" fill="#1d4ed8"/><rect x="240" y="90" width="40" height="60" fill="#0891b2"/><rect x="280" y="120" width="40" height="30" fill="#22d3ee"/><rect x="180" y="140" width="160" height="10" fill="#334155"/><g fill="#7dd3fc" opacity="0.7"><rect x="108" y="80" width="8" height="8"/><rect x="126" y="80" width="8" height="8"/><rect x="248" y="100" width="8" height="8"/></g><text x="20" y="34" font-family="Orbitron" font-weight="700" font-size="16" fill="#7dd3fc">BLOCKWORLD</text></svg></a>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="flex justify-between items-center mb-2"><span class="text-[10px] font-bold tracking-widest text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">ADVENTURE / SANDBOX</span><span class="text-amber-400 text-sm font-semibold">★ 4.8</span></div>
+          <h3 class="font-display font-bold text-lg text-white mb-1.5"><a href="#/game/blockworld" class="hover:text-cyan-300">BLOCKWORLD</a></h3>
+          <p class="text-slate-400 text-sm mb-4 flex-1">Explore a block-based world, collect resources and build your own structures.</p>
+          <div class="flex items-center gap-2.5 mt-auto">
+            <a href="#/play/blockworld" class="btn-neon flex-1 text-center text-void font-bold text-sm px-4 py-2.5 rounded-lg" style="color:#05070d">▶ PLAY</a>
+            <button class="heart-btn fav-toggle border border-slate-600 rounded-lg p-2.5 hover:border-rose-500 transition" data-id="blockworld" aria-label="Favorite Blockworld"><svg class="w-4.5 h-4.5 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.1-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- neon-circuit -->
+      <article class="game-card card-glow rounded-xl border border-slate-700/60 bg-navy overflow-hidden flex flex-col" data-title="neon circuit racing" data-cat="Racing" data-desc="Race through futuristic neon tracks, beat your best times and master difficult tracks." data-rating="4.7">
+        <a href="#/game/neon-circuit"><svg viewBox="0 0 400 200" class="w-full block" role="img" aria-label="Neon Circuit thumbnail"><rect width="400" height="200" fill="#150a33"/><path d="M0 165 L140 95 H260 L400 165" fill="none" stroke="#312e81" stroke-width="30"/><path d="M0 165 L140 95 H260 L400 165" fill="none" stroke="#a78bfa" stroke-width="2" stroke-dasharray="10 8"/><path d="M110 130 h70 v-16 h32 v-32 h46" fill="none" stroke="#a78bfa" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="258" cy="82" r="5" fill="#22d3ee"/><g fill="#c4b5fd" opacity="0.6"><rect x="30" y="36" width="5" height="46"/><rect x="370" y="50" width="5" height="56"/></g><text x="20" y="34" font-family="Orbitron" font-weight="700" font-size="16" fill="#c4b5fd">NEON CIRCUIT</text></svg></a>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="flex justify-between items-center mb-2"><span class="text-[10px] font-bold tracking-widest text-violet-400 bg-violet-500/10 px-2 py-0.5 rounded">RACING</span><span class="text-amber-400 text-sm font-semibold">★ 4.7</span></div>
+          <h3 class="font-display font-bold text-lg text-white mb-1.5"><a href="#/game/neon-circuit" class="hover:text-cyan-300">NEON CIRCUIT</a></h3>
+          <p class="text-slate-400 text-sm mb-4 flex-1">Race through futuristic neon tracks, beat your best times and master difficult tracks.</p>
+          <div class="flex items-center gap-2.5 mt-auto">
+            <a href="#/play/neon-circuit" class="btn-neon flex-1 text-center text-void font-bold text-sm px-4 py-2.5 rounded-lg" style="color:#05070d">▶ PLAY</a>
+            <button class="heart-btn fav-toggle border border-slate-600 rounded-lg p-2.5 hover:border-rose-500 transition" data-id="neon-circuit" aria-label="Favorite Neon Circuit"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.1-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- highway-escape -->
+      <article class="game-card card-glow rounded-xl border border-slate-700/60 bg-navy overflow-hidden flex flex-col" data-title="highway escape driving chase action" data-cat="Action" data-desc="Drive through busy highways while avoiding obstacles and escaping fictional pursuers." data-rating="4.5">
+        <a href="#/game/highway-escape"><svg viewBox="0 0 400 200" class="w-full block" role="img" aria-label="Highway Escape thumbnail"><rect width="400" height="200" fill="#0b0b14"/><polygon points="120,0 280,0 400,200 0,200" fill="#171725"/><path d="M200 0 V200" stroke="#facc15" stroke-dasharray="14 12" stroke-width="4"/><g stroke="#e2e8f0" stroke-opacity="0.25"><path d="M120 0 L0 200M280 0 L400 200"/></g><rect x="182" y="110" width="36" height="60" rx="8" fill="#22d3ee"/><rect x="190" y="122" width="20" height="20" rx="4" fill="#0e7490"/><g fill="#3b82f6"><rect x="160" y="30" width="28" height="44" rx="6"/><rect x="212" y="20" width="28" height="44" rx="6"/></g><text x="20" y="34" font-family="Orbitron" font-weight="700" font-size="15" fill="#f87171">HIGHWAY ESCAPE</text></svg></a>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="flex justify-between items-center mb-2"><span class="text-[10px] font-bold tracking-widest text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded">ACTION / RACING</span><span class="text-amber-400 text-sm font-semibold">★ 4.5</span></div>
+          <h3 class="font-display font-bold text-lg text-white mb-1.5"><a href="#/game/highway-escape" class="hover:text-cyan-300">HIGHWAY ESCAPE</a></h3>
+          <p class="text-slate-400 text-sm mb-4 flex-1">Drive through busy highways while avoiding obstacles and escaping fictional pursuers.</p>
+          <div class="flex items-center gap-2.5 mt-auto">
+            <a href="#/play/highway-escape" class="btn-neon flex-1 text-center text-void font-bold text-sm px-4 py-2.5 rounded-lg" style="color:#05070d">▶ PLAY</a>
+            <button class="heart-btn fav-toggle border border-slate-600 rounded-lg p-2.5 hover:border-rose-500 transition" data-id="highway-escape" aria-label="Favorite Highway Escape"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.1-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- neon-flight -->
+      <article class="game-card card-glow rounded-xl border border-slate-700/60 bg-navy overflow-hidden flex flex-col" data-title="neon flight flying arcade aircraft" data-cat="Arcade" data-desc="Pilot a futuristic aircraft through dangerous obstacles and collect energy rings." data-rating="4.6">
+        <a href="#/game/neon-flight"><svg viewBox="0 0 400 200" class="w-full block" role="img" aria-label="Neon Flight thumbnail"><rect width="400" height="200" fill="#071021"/><ellipse cx="200" cy="200" rx="200" ry="60" fill="#22d3ee" opacity="0.08"/><ellipse cx="200" cy="200" rx="130" ry="38" fill="none" stroke="#22d3ee" stroke-opacity="0.4"/><path d="M200 50 l28 66 -28 26 -28 -26 z" fill="#3b82f6"/><g fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="110" cy="95" r="7"/><circle cx="290" cy="95" r="7"/></g><g stroke="#22d3ee" stroke-opacity="0.3"><path d="M0 170 Q200 130 400 170" fill="none"/></g><text x="20" y="34" font-family="Orbitron" font-weight="700" font-size="16" fill="#7dd3fc">NEON FLIGHT</text></svg></a>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="flex justify-between items-center mb-2"><span class="text-[10px] font-bold tracking-widest text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded">ARCADE</span><span class="text-amber-400 text-sm font-semibold">★ 4.6</span></div>
+          <h3 class="font-display font-bold text-lg text-white mb-1.5"><a href="#/game/neon-flight" class="hover:text-cyan-300">NEON FLIGHT</a></h3>
+          <p class="text-slate-400 text-sm mb-4 flex-1">Pilot a futuristic aircraft through dangerous obstacles and collect energy rings.</p>
+          <div class="flex items-center gap-2.5 mt-auto">
+            <a href="#/play/neon-flight" class="btn-neon flex-1 text-center text-void font-bold text-sm px-4 py-2.5 rounded-lg" style="color:#05070d">▶ PLAY</a>
+            <button class="heart-btn fav-toggle border border-slate-600 rounded-lg p-2.5 hover:border-rose-500 transition" data-id="neon-flight" aria-label="Favorite Neon Flight"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.1-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- craftverse -->
+      <article class="game-card card-glow rounded-xl border border-slate-700/60 bg-navy overflow-hidden flex flex-col" data-title="craftverse crafting building simulation" data-cat="Simulation" data-desc="Collect resources, craft objects and build your own small world." data-rating="4.4">
+        <a href="#/game/craftverse"><svg viewBox="0 0 400 200" class="w-full block" role="img" aria-label="Craftverse thumbnail"><rect width="400" height="200" fill="#0a1420"/><rect x="60" y="110" width="70" height="60" fill="#22c55e"/><rect x="130" y="60" width="70" height="110" fill="#a16207"/><rect x="200" y="110" width="70" height="60" fill="#3b82f6"/><rect x="270" y="135" width="70" height="35" fill="#f59e0b"/><rect x="40" y="170" width="330" height="14" fill="#334155"/><g fill="#bbf7d0" opacity="0.6"><rect x="72" y="122" width="12" height="12"/><rect x="212" y="122" width="12" height="12"/></g><text x="20" y="34" font-family="Orbitron" font-weight="700" font-size="16" fill="#86efac">CRAFTVERSE</text></svg></a>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="flex justify-between items-center mb-2"><span class="text-[10px] font-bold tracking-widest text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">SIMULATION / ADVENTURE</span><span class="text-amber-400 text-sm font-semibold">★ 4.4</span></div>
+          <h3 class="font-display font-bold text-lg text-white mb-1.5"><a href="#/game/craftverse" class="hover:text-cyan-300">CRAFTVERSE</a></h3>
+          <p class="text-slate-400 text-sm mb-4 flex-1">Collect resources, craft objects and build your own small world.</p>
+          <div class="flex items-center gap-2.5 mt-auto">
+            <a href="#/play/craftverse" class="btn-neon flex-1 text-center text-void font-bold text-sm px-4 py-2.5 rounded-lg" style="color:#05070d">▶ PLAY</a>
+            <button class="heart-btn fav-toggle border border-slate-600 rounded-lg p-2.5 hover:border-rose-500 transition" data-id="craftverse" aria-label="Favorite Craftverse"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.1-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- cosmic-wave -->
+      <article class="game-card card-glow rounded-xl border border-slate-700/60 bg-navy overflow-hidden flex flex-col" data-title="cosmic wave space arcade reflex" data-cat="Arcade" data-desc="Control a futuristic spacecraft and survive increasingly difficult waves of obstacles." data-rating="4.8">
+        <a href="#/game/cosmic-wave"><svg viewBox="0 0 400 200" class="w-full block" role="img" aria-label="Cosmic Wave thumbnail"><rect width="400" height="200" fill="#040915"/><circle cx="200" cy="240" r="150" fill="none" stroke="#22d3ee" stroke-opacity="0.3" stroke-width="2"/><polygon points="200,55 222,110 200,155 178,110" fill="#22d3ee"/><g fill="#e2e8f0"><circle cx="70" cy="40" r="1.6"/><circle cx="330" cy="60" r="1.6"/><circle cx="120" cy="150" r="1.4"/><circle cx="300" cy="160" r="1.4"/><circle cx="50" cy="100" r="1.2"/></g><text x="20" y="34" font-family="Orbitron" font-weight="700" font-size="16" fill="#22d3ee">COSMIC WAVE</text></svg></a>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="flex justify-between items-center mb-2"><span class="text-[10px] font-bold tracking-widest text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded">ARCADE</span><span class="text-amber-400 text-sm font-semibold">★ 4.8</span></div>
+          <h3 class="font-display font-bold text-lg text-white mb-1.5"><a href="#/game/cosmic-wave" class="hover:text-cyan-300">COSMIC WAVE</a></h3>
+          <p class="text-slate-400 text-sm mb-4 flex-1">Control a futuristic spacecraft and survive increasingly difficult waves of obstacles.</p>
+          <div class="flex items-center gap-2.5 mt-auto">
+            <a href="#/play/cosmic-wave" class="btn-neon flex-1 text-center text-void font-bold text-sm px-4 py-2.5 rounded-lg" style="color:#05070d">▶ PLAY</a>
+            <button class="heart-btn fav-toggle border border-slate-600 rounded-lg p-2.5 hover:border-rose-500 transition" data-id="cosmic-wave" aria-label="Favorite Cosmic Wave"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.1-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- poly-rush -->
+      <article class="game-card card-glow rounded-xl border border-slate-700/60 bg-navy overflow-hidden flex flex-col" data-title="poly rush low poly arcade racer racing" data-cat="Racing" data-desc="A brand-new low-poly arcade racer — carve neon corners, hit ramps and beat your lap records." data-rating="4.8">
+        <a href="#/game/poly-rush"><svg viewBox="0 0 400 200" class="w-full block" role="img" aria-label="Poly Rush thumbnail"><rect width="400" height="200" fill="#070b1c"/><polygon points="0,200 100,120 220,150 340,90 400,200" fill="#101b3a"/><path d="M0 185 L110 115 L230 142 L400 70" fill="none" stroke="#22d3ee" stroke-width="16"/><path d="M0 185 L110 115 L230 142 L400 70" fill="none" stroke="#67e8f9" stroke-width="2" stroke-dasharray="12 10"/><polygon points="150,120 180,128 165,142" fill="#f472b6"/><polygon points="290,95 320,103 305,117" fill="#facc15"/><polygon points="60,140 84,146 72,160" fill="#f43f5e"/><text x="20" y="34" font-family="Orbitron" font-weight="700" font-size="16" fill="#67e8f9">POLY RUSH</text></svg></a>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="flex justify-between items-center mb-2"><span class="text-[10px] font-bold tracking-widest text-violet-400 bg-violet-500/10 px-2 py-0.5 rounded">RACING</span><span class="text-amber-400 text-sm font-semibold">★ 4.8</span></div>
+          <h3 class="font-display font-bold text-lg text-white mb-1.5"><a href="#/game/poly-rush" class="hover:text-cyan-300">POLY RUSH</a></h3>
+          <p class="text-slate-400 text-sm mb-4 flex-1">A brand-new low-poly arcade racer — carve neon corners, hit ramps and beat your lap records.</p>
+          <div class="flex items-center gap-2.5 mt-auto">
+            <a href="#/play/poly-rush" class="btn-neon flex-1 text-center text-void font-bold text-sm px-4 py-2.5 rounded-lg" style="color:#05070d">▶ PLAY</a>
+            <button class="heart-btn fav-toggle border border-slate-600 rounded-lg p-2.5 hover:border-rose-500 transition" data-id="poly-rush" aria-label="Favorite Poly Rush"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.1-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- sky-rush -->
+      <article class="game-card card-glow rounded-xl border border-slate-700/60 bg-navy overflow-hidden flex flex-col" data-title="sky rush futuristic flight rings checkpoints arcade" data-cat="Arcade" data-desc="An original futuristic arcade flight game — fly through energy rings, dodge obstacles and survive rising levels." data-rating="4.7">
+        <a href="#/game/sky-rush"><svg viewBox="0 0 400 200" class="w-full block" role="img" aria-label="Sky Rush thumbnail"><rect width="400" height="200" fill="#03101f"/><g stroke="#22d3ee" stroke-opacity="0.2"><path d="M0 50 Q100 35 200 50 T400 50" fill="none"/><path d="M0 160 Q100 145 200 160 T400 160" fill="none"/></g><ellipse cx="220" cy="105" rx="26" ry="34" fill="none" stroke="#f59e0b" stroke-width="5"/><ellipse cx="330" cy="70" rx="18" ry="24" fill="none" stroke="#f59e0b" stroke-opacity="0.6" stroke-width="4"/><path d="M90 100 L128 88 L128 112 Z" fill="#67e8f9"/><path d="M100 100 L116 95 L116 105 Z" fill="#3b82f6"/><g fill="#475569"><polygon points="160,150 190,150 175,110"/><polygon points="280,150 310,150 295,120"/></g><text x="20" y="34" font-family="Orbitron" font-weight="700" font-size="16" fill="#67e8f9">SKY RUSH</text></svg></a>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="flex justify-between items-center mb-2"><span class="text-[10px] font-bold tracking-widest text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded">ARCADE</span><span class="text-amber-400 text-sm font-semibold">★ 4.7</span></div>
+          <h3 class="font-display font-bold text-lg text-white mb-1.5"><a href="#/game/sky-rush" class="hover:text-cyan-300">SKY RUSH</a></h3>
+          <p class="text-slate-400 text-sm mb-4 flex-1">An original futuristic arcade flight game — fly through energy rings, dodge obstacles and survive rising levels.</p>
+          <div class="flex items-center gap-2.5 mt-auto">
+            <a href="#/play/sky-rush" class="btn-neon flex-1 text-center text-void font-bold text-sm px-4 py-2.5 rounded-lg" style="color:#05070d">▶ PLAY</a>
+            <button class="heart-btn fav-toggle border border-slate-600 rounded-lg p-2.5 hover:border-rose-500 transition" data-id="sky-rush" aria-label="Favorite Sky Rush"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.1-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- neon-serpent -->
+      <article class="game-card card-glow rounded-xl border border-slate-700/60 bg-navy overflow-hidden flex flex-col" data-title="neon serpent snake arcade glowing" data-cat="Arcade" data-desc="Control a glowing serpent, collect energy and survive as long as possible." data-rating="4.9">
+        <a href="#/game/neon-serpent" class="block"><svg viewBox="0 0 400 200" class="w-full block" role="img" aria-label="Neon Serpent thumbnail"><rect width="400" height="200" fill="#062a3a"/><g stroke="#22d3ee" stroke-opacity="0.15"><path d="M0 40h400M0 90h400M0 140h400M60 0v200M140 0v200M220 0v200M300 0v200"/></g><polyline points="80,160 80,90 180,90 180,140 260,140 260,60 330,60" fill="none" stroke="#22d3ee" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><circle cx="330" cy="60" r="10" fill="#f43f5e"/><circle cx="330" cy="60" r="18" fill="none" stroke="#f43f5e" stroke-opacity="0.4"/><text x="20" y="34" font-family="Orbitron" font-weight="700" font-size="16" fill="#22d3ee">NEON SERPENT</text></svg></a>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="flex justify-between items-center mb-2"><span class="text-[10px] font-bold tracking-widest text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded">ARCADE</span><span class="text-amber-400 text-sm font-semibold">★ 4.9</span></div>
+          <h3 class="font-display font-bold text-lg text-white mb-1.5"><a href="#/game/neon-serpent" class="hover:text-cyan-300">NEON SERPENT</a></h3>
+          <p class="text-slate-400 text-sm mb-4 flex-1">Control a glowing serpent, collect energy and survive as long as possible.</p>
+          <div class="flex items-center gap-2.5 mt-auto">
+            <a href="#/play/neon-serpent" class="btn-neon flex-1 text-center text-void font-bold text-sm px-4 py-2.5 rounded-lg" style="color:#05070d">▶ PLAY</a>
+            <button class="heart-btn fav-toggle border border-slate-600 rounded-lg p-2.5 hover:border-rose-500 transition" data-id="neon-serpent" aria-label="Favorite Neon Serpent"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.1-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- voxel-sandbox -->
+      <article class="game-card card-glow rounded-xl border border-slate-700/60 bg-navy overflow-hidden flex flex-col" data-title="voxel sandbox block building exploration" data-cat="Adventure" data-desc="An original block-building and exploration game — shape a voxel world of your own." data-rating="4.7">
+        <a href="#/game/voxel-sandbox"><svg viewBox="0 0 400 200" class="w-full block" role="img" aria-label="Voxel Sandbox thumbnail"><rect width="400" height="200" fill="#0d1b2a"/><g><rect x="50" y="120" width="50" height="50" fill="#8d6e63"/><rect x="100" y="90" width="50" height="80" fill="#a1887f"/><rect x="150" y="140" width="50" height="30" fill="#6d4c41"/><rect x="230" y="70" width="50" height="100" fill="#26a69a"/><rect x="280" y="110" width="50" height="60" fill="#4db6ac"/><rect x="330" y="150" width="40" height="20" fill="#00897b"/></g><g fill="#ffca28" opacity="0.9"><rect x="105" y="100" width="12" height="12"/><rect x="240" y="82" width="12" height="12"/></g><text x="20" y="34" font-family="Orbitron" font-weight="700" font-size="16" fill="#80cbc4">VOXEL SANDBOX</text></svg></a>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="flex justify-between items-center mb-2"><span class="text-[10px] font-bold tracking-widest text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">ADVENTURE / SANDBOX</span><span class="text-amber-400 text-sm font-semibold">★ 4.7</span></div>
+          <h3 class="font-display font-bold text-lg text-white mb-1.5"><a href="#/game/voxel-sandbox" class="hover:text-cyan-300">VOXEL SANDBOX</a></h3>
+          <p class="text-slate-400 text-sm mb-4 flex-1">An original block-building and exploration game — shape a voxel world of your own.</p>
+          <div class="flex items-center gap-2.5 mt-auto">
+            <a href="#/play/voxel-sandbox" class="btn-neon flex-1 text-center text-void font-bold text-sm px-4 py-2.5 rounded-lg" style="color:#05070d">▶ PLAY</a>
+            <button class="heart-btn fav-toggle border border-slate-600 rounded-lg p-2.5 hover:border-rose-500 transition" data-id="voxel-sandbox" aria-label="Favorite Voxel Sandbox"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.1-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- low-poly-racing -->
+      <article class="game-card card-glow rounded-xl border border-slate-700/60 bg-navy overflow-hidden flex flex-col" data-title="low poly racing tracks ramps obstacles" data-cat="Racing" data-desc="An original fast racing game with tracks, ramps and obstacles — chase your best lap." data-rating="4.8">
+        <a href="#/game/low-poly-racing"><svg viewBox="0 0 400 200" class="w-full block" role="img" aria-label="Low-Poly Racing thumbnail"><rect width="400" height="200" fill="#1a0b2e"/><polygon points="0,170 120,100 260,130 400,80 400,200 0,200" fill="#312e81"/><path d="M0 175 L120 105 L260 135 L400 85" fill="none" stroke="#f472b6" stroke-width="3" stroke-dasharray="12 10"/><polygon points="200,60 230,80 200,100 170,80" fill="#f472b6"/><polygon points="300,45 320,58 300,71 280,58" fill="#22d3ee"/><g fill="#c4b5fd" opacity="0.6"><rect x="30" y="40" width="5" height="40"/><rect x="365" y="55" width="5" height="50"/></g><text x="20" y="34" font-family="Orbitron" font-weight="700" font-size="15" fill="#f9a8d4">LOW-POLY RACING</text></svg></a>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="flex justify-between items-center mb-2"><span class="text-[10px] font-bold tracking-widest text-violet-400 bg-violet-500/10 px-2 py-0.5 rounded">RACING</span><span class="text-amber-400 text-sm font-semibold">★ 4.8</span></div>
+          <h3 class="font-display font-bold text-lg text-white mb-1.5"><a href="#/game/low-poly-racing" class="hover:text-cyan-300">LOW-POLY RACING</a></h3>
+          <p class="text-slate-400 text-sm mb-4 flex-1">An original fast racing game with tracks, ramps and obstacles — chase your best lap.</p>
+          <div class="flex items-center gap-2.5 mt-auto">
+            <a href="#/play/low-poly-racing" class="btn-neon flex-1 text-center text-void font-bold text-sm px-4 py-2.5 rounded-lg" style="color:#05070d">▶ PLAY</a>
+            <button class="heart-btn fav-toggle border border-slate-600 rounded-lg p-2.5 hover:border-rose-500 transition" data-id="low-poly-racing" aria-label="Favorite Low-Poly Racing"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.1-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- arcade-flight -->
+      <article class="game-card card-glow rounded-xl border border-slate-700/60 bg-navy overflow-hidden flex flex-col" data-title="arcade flight flying obstacles checkpoints" data-cat="Arcade" data-desc="An original fast flying game — thread obstacles and hit checkpoints at speed." data-rating="4.6">
+        <a href="#/game/arcade-flight"><svg viewBox="0 0 400 200" class="w-full block" role="img" aria-label="Arcade Flight thumbnail"><rect width="400" height="200" fill="#051019"/><g stroke="#22d3ee" stroke-opacity="0.3"><path d="M0 60 Q100 40 200 60 T400 60" fill="none"/><path d="M0 150 Q100 130 200 150 T400 150" fill="none"/></g><g fill="#334155"><polygon points="90,60 110,60 100,110"/><polygon points="290,150 310,150 300,95"/></g><path d="M180 95 L225 83 L225 107 Z" fill="#e2e8f0"/><circle cx="330" cy="60" r="10" fill="none" stroke="#f59e0b" stroke-width="3"/><circle cx="70" cy="150" r="10" fill="none" stroke="#f59e0b" stroke-width="3"/><text x="20" y="34" font-family="Orbitron" font-weight="700" font-size="16" fill="#7dd3fc">ARCADE FLIGHT</text></svg></a>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="flex justify-between items-center mb-2"><span class="text-[10px] font-bold tracking-widest text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded">ARCADE</span><span class="text-amber-400 text-sm font-semibold">★ 4.6</span></div>
+          <h3 class="font-display font-bold text-lg text-white mb-1.5"><a href="#/game/arcade-flight" class="hover:text-cyan-300">ARCADE FLIGHT</a></h3>
+          <p class="text-slate-400 text-sm mb-4 flex-1">An original fast flying game — thread obstacles and hit checkpoints at speed.</p>
+          <div class="flex items-center gap-2.5 mt-auto">
+            <a href="#/play/arcade-flight" class="btn-neon flex-1 text-center text-void font-bold text-sm px-4 py-2.5 rounded-lg" style="color:#05070d">▶ PLAY</a>
+            <button class="heart-btn fav-toggle border border-slate-600 rounded-lg p-2.5 hover:border-rose-500 transition" data-id="arcade-flight" aria-label="Favorite Arcade Flight"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.1-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- space-reflex -->
+      <article class="game-card card-glow rounded-xl border border-slate-700/60 bg-navy overflow-hidden flex flex-col" data-title="space reflex spaceship dodging asteroids" data-cat="Arcade" data-desc="An original spaceship obstacle-dodging game — pure reflexes, pure speed." data-rating="4.7">
+        <a href="#/game/space-reflex"><svg viewBox="0 0 400 200" class="w-full block" role="img" aria-label="Space Reflex thumbnail"><rect width="400" height="200" fill="#020410"/><g fill="#e2e8f0"><circle cx="40" cy="30" r="1.6"/><circle cx="360" cy="40" r="1.6"/><circle cx="120" cy="170" r="1.4"/><circle cx="320" cy="170" r="1.4"/><circle cx="200" cy="20" r="1.4"/></g><g fill="#64748b"><polygon points="100,80 130,70 140,95 115,110 95,95"/><polygon points="280,110 305,100 315,125 295,138 275,125"/><circle cx="200" cy="60" r="14"/></g><polygon points="190,140 210,134 210,156 190,150" fill="#22d3ee"/><path d="M190 145 L165 148 L190 155 Z" fill="#f43f5e"/><text x="20" y="34" font-family="Orbitron" font-weight="700" font-size="16" fill="#22d3ee">SPACE REFLEX</text></svg></a>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="flex justify-between items-center mb-2"><span class="text-[10px] font-bold tracking-widest text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded">ARCADE</span><span class="text-amber-400 text-sm font-semibold">★ 4.7</span></div>
+          <h3 class="font-display font-bold text-lg text-white mb-1.5"><a href="#/game/space-reflex" class="hover:text-cyan-300">SPACE REFLEX</a></h3>
+          <p class="text-slate-400 text-sm mb-4 flex-1">An original spaceship obstacle-dodging game — pure reflexes, pure speed.</p>
+          <div class="flex items-center gap-2.5 mt-auto">
+            <a href="#/play/space-reflex" class="btn-neon flex-1 text-center text-void font-bold text-sm px-4 py-2.5 rounded-lg" style="color:#05070d">▶ PLAY</a>
+            <button class="heart-btn fav-toggle border border-slate-600 rounded-lg p-2.5 hover:border-rose-500 transition" data-id="space-reflex" aria-label="Favorite Space Reflex"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.1-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- precision-target -->
+      <article class="game-card card-glow rounded-xl border border-slate-700/60 bg-navy overflow-hidden flex flex-col" data-title="precision target shooting accuracy arcade" data-cat="Casual" data-desc="An original arcade target game — accuracy scoring across timed rounds." data-rating="4.5">
+        <a href="#/game/precision-target"><svg viewBox="0 0 400 200" class="w-full block" role="img" aria-label="Precision Target thumbnail"><rect width="400" height="200" fill="#101418"/><path d="M0 160 H400" stroke="#334155" stroke-width="10"/><g><circle cx="120" cy="110" r="30" fill="#f43f5e"/><circle cx="120" cy="110" r="20" fill="#f8fafc"/><circle cx="120" cy="110" r="10" fill="#f43f5e"/><circle cx="270" cy="95" r="22" fill="#22d3ee"/><circle cx="270" cy="95" r="13" fill="#f8fafc"/><circle cx="270" cy="95" r="6" fill="#0891b2"/></g><path d="M330 40 L360 70 M355 35 L365 45 M330 65 L340 55" stroke="#facc15" stroke-width="3" stroke-linecap="round"/><text x="20" y="34" font-family="Orbitron" font-weight="700" font-size="15" fill="#fca5a5">PRECISION TARGET</text></svg></a>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="flex justify-between items-center mb-2"><span class="text-[10px] font-bold tracking-widest text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded">CASUAL</span><span class="text-amber-400 text-sm font-semibold">★ 4.5</span></div>
+          <h3 class="font-display font-bold text-lg text-white mb-1.5"><a href="#/game/precision-target" class="hover:text-cyan-300">PRECISION TARGET</a></h3>
+          <p class="text-slate-400 text-sm mb-4 flex-1">An original arcade target game — accuracy scoring across timed rounds.</p>
+          <div class="flex items-center gap-2.5 mt-auto">
+            <a href="#/play/precision-target" class="btn-neon flex-1 text-center text-void font-bold text-sm px-4 py-2.5 rounded-lg" style="color:#05070d">▶ PLAY</a>
+            <button class="heart-btn fav-toggle border border-slate-600 rounded-lg p-2.5 hover:border-rose-500 transition" data-id="precision-target" aria-label="Favorite Precision Target"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.1-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- crafting-adventure -->
+      <article class="game-card card-glow rounded-xl border border-slate-700/60 bg-navy overflow-hidden flex flex-col" data-title="crafting adventure build gather explore simulation" data-cat="Simulation" data-desc="An original crafting, building and exploration game — gather, craft, create." data-rating="4.4">
+        <a href="#/game/crafting-adventure"><svg viewBox="0 0 400 200" class="w-full block" role="img" aria-label="Crafting Adventure thumbnail"><rect width="400" height="200" fill="#0e1a14"/><rect x="0" y="150" width="400" height="50" fill="#1f3d2b"/><g><rect x="50" y="100" width="55" height="50" fill="#8d6e63"/><polygon points="45,100 77,75 110,100" fill="#c62828"/><rect x="150" y="110" width="45" height="40" fill="#78909c"/><rect x="240" y="90" width="16" height="60" fill="#6d4c41"/><circle cx="248" cy="80" r="22" fill="#2e7d32"/><rect x="300" y="120" width="50" height="30" fill="#a1887f"/></g><g fill="#ffd54f"><rect x="200" y="125" width="14" height="14"/><rect x="222" y="130" width="10" height="10"/></g><text x="20" y="34" font-family="Orbitron" font-weight="700" font-size="15" fill="#a5d6a7">CRAFTING ADVENTURE</text></svg></a>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="flex justify-between items-center mb-2"><span class="text-[10px] font-bold tracking-widest text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">SIMULATION / ADVENTURE</span><span class="text-amber-400 text-sm font-semibold">★ 4.4</span></div>
+          <h3 class="font-display font-bold text-lg text-white mb-1.5"><a href="#/game/crafting-adventure" class="hover:text-cyan-300">CRAFTING ADVENTURE</a></h3>
+          <p class="text-slate-400 text-sm mb-4 flex-1">An original crafting, building and exploration game — gather, craft, create.</p>
+          <div class="flex items-center gap-2.5 mt-auto">
+            <a href="#/play/crafting-adventure" class="btn-neon flex-1 text-center text-void font-bold text-sm px-4 py-2.5 rounded-lg" style="color:#05070d">▶ PLAY</a>
+            <button class="heart-btn fav-toggle border border-slate-600 rounded-lg p-2.5 hover:border-rose-500 transition" data-id="crafting-adventure" aria-label="Favorite Crafting Adventure"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.1-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg></button>
+          </div>
+        </div>
+      </article>
+    </div>
+    <p id="noResults" class="hidden text-center py-16 text-slate-400">
+      <span class="text-4xl block mb-3">👾</span>
+      <span class="font-display text-lg text-white block mb-1">NO GAMES FOUND</span>
+      Try a different search term or category.
+    </p>
+  </div>
+</section>
+
+<!-- @section: game-detail (shared shell; content injected from static data map is NOT used — details are below per game) -->
+<section id="page-game" class="page hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+    <a id="detailBack" href="#/games" class="text-cyan-400 text-sm font-semibold uppercase tracking-wider hover:text-cyan-300">← Back to games</a>
+    <div class="grid lg:grid-cols-3 gap-10 mt-6">
+      <div class="lg:col-span-2">
+        <div id="detailThumb" class="rounded-2xl border border-cyan-500/30 overflow-hidden shadow-glowsm"></div>
+        <h1 id="detailTitle" class="font-display text-3xl sm:text-4xl font-black text-white mt-8"></h1>
+        <div class="flex flex-wrap items-center gap-3 mt-3 mb-5">
+          <span id="detailCat" class="text-xs font-bold tracking-widest text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 rounded-full px-3 py-1"></span>
+          <span id="detailRating" class="text-amber-400 font-semibold"></span>
+        </div>
+        <p id="detailDesc" class="text-slate-300 text-lg"></p>
+        <h2 class="font-display text-xl font-bold text-white mt-9 mb-3">HOW TO PLAY</h2>
+        <p id="detailHow" class="text-slate-400"></p>
+        <h2 class="font-display text-xl font-bold text-white mt-9 mb-3">CONTROLS</h2>
+        <ul id="detailControls" class="space-y-2 text-slate-300"></ul>
+      </div>
+      <aside>
+        <div class="rounded-2xl border border-slate-700/60 bg-navy p-6 sticky top-24">
+          <a id="detailPlay" href="#/play/neon-serpent" data-play="neon-serpent" class="btn-neon block text-center text-void font-display font-bold text-lg px-6 py-4 rounded-xl tracking-widest mb-3" style="color:#05070d">▶ PLAY GAME</a>
+          <button id="detailFull" type="button" class="w-full mb-3 border border-cyan-500/60 text-cyan-300 font-display font-bold py-3 rounded-xl tracking-widest hover:bg-cyan-500/10 transition flex items-center justify-center gap-2" aria-label="Play in fullscreen"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>FULLSCREEN PLAY</button>
+          <div class="flex gap-2 mb-3">
+            <button id="likeBtn" type="button" class="flex-1 flex items-center justify-center gap-1.5 border border-slate-600 rounded-xl py-2.5 font-semibold text-slate-300 hover:border-emerald-500 transition" aria-label="Like this game"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 10v10M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a1 1 0 0 1-1-1v-10a1 1 0 0 1 1-1h3.76a2 2 0 0 0 1.79-1.11L12 2h1a2 2 0 0 1 2 2z"/></svg><span id="likeCount">0</span></button>
+            <button id="dislikeBtn" type="button" class="flex-1 flex items-center justify-center gap-1.5 border border-slate-600 rounded-xl py-2.5 font-semibold text-slate-300 hover:border-rose-500 transition" aria-label="Dislike this game"><svg class="w-4 h-4 rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 10v10M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a1 1 0 0 1-1-1v-10a1 1 0 0 1 1-1h3.76a2 2 0 0 0 1.79-1.11L12 2h1a2 2 0 0 1 2 2z"/></svg><span id="dislikeCount">0</span></button>
+          </div>
+          <button class="fav-toggle heart-btn w-full border border-slate-600 rounded-xl py-3 font-semibold text-slate-300 hover:border-rose-500 transition flex items-center justify-center gap-2" data-id="neon-serpent"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.1-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg><span>Add to Favorites</span></button>
+          <h3 class="font-display font-bold text-white mt-8 mb-4">RELATED GAMES</h3>
+          <div class="space-y-2.5 text-sm">
+            <a href="#/game/cosmic-wave" class="related-link block rounded-lg border border-slate-700/60 px-4 py-3 hover:border-cyan-500/50 hover:text-cyan-300 transition">⚡ COSMIC WAVE · Arcade</a>
+            <a href="#/game/neon-flight" class="block rounded-lg border border-slate-700/60 px-4 py-3 hover:border-cyan-500/50 hover:text-cyan-300 transition">✈ NEON FLIGHT · Arcade</a>
+            <a href="#/game/neon-circuit" class="block rounded-lg border border-slate-700/60 px-4 py-3 hover:border-cyan-500/50 hover:text-cyan-300 transition">🏁 NEON CIRCUIT · Racing</a>
+            <a href="#/game/blockworld" class="block rounded-lg border border-slate-700/60 px-4 py-3 hover:border-cyan-500/50 hover:text-cyan-300 transition">🧊 BLOCKWORLD · Adventure</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- NEON SERPENT flow is handled by the single direct-DOM router in the main script -->
+
+<!-- @section: play / GameShell -->
+<section id="page-play" class="page hidden">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <a href="#/games" class="text-cyan-400 text-sm font-semibold uppercase tracking-wider hover:text-cyan-300">← Exit game</a>
+    <div class="flex flex-wrap items-center justify-between gap-4 mt-4 mb-6">
+      <h1 id="playTitle" class="font-display text-2xl sm:text-3xl font-black text-white">NEON <span class="text-cyan-400 neon-text">SERPENT</span></h1>
+      <div class="flex items-center gap-3 flex-wrap">
+        <div class="rounded-xl border border-cyan-500/40 bg-navy px-4 py-2"><span class="text-[10px] tracking-widest text-slate-400 block">SCORE</span><span id="shellScore" class="font-display font-bold text-cyan-300 text-lg">0</span></div>
+        <div class="rounded-xl border border-amber-500/40 bg-navy px-4 py-2"><span class="text-[10px] tracking-widest text-slate-400 block">HIGH SCORE</span><span id="shellHigh" class="font-display font-bold text-amber-300 text-lg">0</span></div>
+        <button id="shellPause" class="border border-slate-600 rounded-xl px-4 py-3 text-slate-300 hover:border-cyan-500 hover:text-cyan-300 transition" aria-label="Pause game"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M10 5v14M14 5v14"/></svg></button>
+        <button id="shellRestart" class="border border-slate-600 rounded-xl px-4 py-3 text-slate-300 hover:border-cyan-500 hover:text-cyan-300 transition" aria-label="Restart game"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 4h4v4M20 8 15 3M4 20 20 4v0M3 12a9 9 0 1 0 3-6.7"/></svg></button>
+        <button id="shellFull" class="border border-slate-600 rounded-xl px-4 py-3 text-slate-300 hover:border-cyan-500 hover:text-cyan-300 transition" aria-label="Fullscreen"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg></button>
+      </div>
+    </div>
+    <div id="shellStage" class="relative rounded-2xl border border-cyan-500/30 bg-navy2 overflow-hidden shadow-glowsm">
+      <canvas id="gameCanvas" width="720" height="480" class="w-full block"></canvas>
+      <div id="shellOverlay" class="absolute inset-0 bg-void/85 flex flex-col items-center justify-center text-center px-6">
+        <p id="overlayTitle" class="font-display text-3xl font-black text-cyan-400 neon-text mb-2">NEON SERPENT</p>
+        <p id="overlayText" class="text-slate-300 mb-6 max-w-md">Collect glowing energy cells to grow and score. Avoid the walls and your own tail. Press any arrow key or tap START to begin.</p>
+        <button id="overlayBtn" class="btn-neon text-void font-display font-bold px-10 py-3.5 rounded-xl tracking-widest" style="color:#05070d">START GAME</button>
+      </div>
+    </div>
+    <div id="comingSoon" class="hidden text-center rounded-2xl border border-slate-700 bg-navy py-20 px-6">
+      <p class="text-5xl mb-4">🛠</p>
+      <p class="font-display text-2xl font-bold text-white mb-2">IN DEVELOPMENT</p>
+      <p class="text-slate-400 max-w-md mx-auto">This game module is being built. Our first playable release is <a href="#/play/neon-serpent" class="text-cyan-400 hover:text-cyan-300 font-semibold">NEON SERPENT</a> — check it out!</p>
+    </div>
+    <!-- touch controls -->
+    <div id="touchControls" class="grid grid-cols-3 gap-2 w-48 mx-auto mt-6 sm:hidden select-none">
+      <span></span>
+      <button class="touch-btn bg-navy border border-cyan-500/50 rounded-xl py-4 text-cyan-300 text-xl active:bg-cyan-500/20" data-dir="up" aria-label="Move up">▲</button>
+      <span></span>
+      <button class="touch-btn bg-navy border border-cyan-500/50 rounded-xl py-4 text-cyan-300 text-xl active:bg-cyan-500/20" data-dir="left" aria-label="Move left">◀</button>
+      <button class="touch-btn bg-navy border border-cyan-500/50 rounded-xl py-4 text-cyan-300 text-xl active:bg-cyan-500/20" data-dir="down" aria-label="Move down">▼</button>
+      <button class="touch-btn bg-navy border border-cyan-500/50 rounded-xl py-4 text-cyan-300 text-xl active:bg-cyan-500/20" data-dir="right" aria-label="Move right">▶</button>
+    </div>
+    <!-- @section: voxel-ui -->
+    <div id="voxelUI" class="hidden mt-6">
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <span class="text-xs tracking-widest text-slate-400 uppercase font-semibold">Blocks</span>
+        <div id="voxelHotbar" class="flex gap-2 flex-wrap justify-center"></div>
+      </div>
+      <div id="voxelTouch" class="mt-4 grid grid-cols-4 gap-2 w-72 max-w-full mx-auto sm:hidden select-none">
+        <button id="vm-l" class="touch-btn bg-navy border border-cyan-500/50 rounded-xl py-4 text-cyan-300 text-xl active:bg-cyan-500/20" aria-label="Strafe left">◀</button>
+        <button id="vm-f" class="touch-btn bg-navy border border-cyan-500/50 rounded-xl py-4 text-cyan-300 text-xl active:bg-cyan-500/20" aria-label="Move forward">▲</button>
+        <button id="vm-r" class="touch-btn bg-navy border border-cyan-500/50 rounded-xl py-4 text-cyan-300 text-xl active:bg-cyan-500/20" aria-label="Strafe right">▶</button>
+        <button id="vm-b" class="touch-btn bg-navy border border-cyan-500/50 rounded-xl py-4 text-cyan-300 text-xl active:bg-cyan-500/20" aria-label="Move back">▼</button>
+        <button id="vm-jump" class="col-span-2 bg-navy border border-cyan-500/50 rounded-xl py-3 text-cyan-300 text-sm font-bold tracking-wider active:bg-cyan-500/20" aria-label="Jump">JUMP</button>
+        <button id="vm-mine" class="bg-navy border border-rose-500/50 rounded-xl py-3 text-rose-300 text-sm font-bold tracking-wider active:bg-rose-500/20" aria-label="Mine block">MINE</button>
+        <button id="vm-place" class="bg-navy border border-emerald-500/50 rounded-xl py-3 text-emerald-300 text-sm font-bold tracking-wider active:bg-emerald-500/20" aria-label="Place block">PLACE</button>
+      </div>
+      <p class="text-center text-xs text-slate-500 mt-3">Desktop: click the game to lock the mouse · Left click mines · Right click places · Keys 1–8 select a block · Drag to look on touch devices</p>
+    </div>
+    <!-- @section: poly-rush-ui -->
+    <div id="polyRushUI" class="hidden mt-6">
+      <div class="flex items-center justify-center gap-4 flex-wrap">
+        <div class="rounded-xl border border-violet-500/40 bg-navy px-4 py-2 text-center"><span class="text-[10px] tracking-widest text-slate-400 block">LAP</span><span id="prLap" class="font-display font-bold text-violet-300 text-lg">1 / 3</span></div>
+        <div class="rounded-xl border border-cyan-500/40 bg-navy px-4 py-2 text-center"><span class="text-[10px] tracking-widest text-slate-400 block">TIME</span><span id="prTime" class="font-display font-bold text-cyan-300 text-lg">0.0s</span></div>
+        <div class="rounded-xl border border-amber-500/40 bg-navy px-4 py-2 text-center"><span class="text-[10px] tracking-widest text-slate-400 block">BEST LAP</span><span id="prBest" class="font-display font-bold text-amber-300 text-lg">—</span></div>
+      </div>
+      <div class="mt-4 grid grid-cols-4 gap-2 w-80 max-w-full mx-auto sm:hidden select-none">
+        <button id="pr-left" class="touch-btn bg-navy border border-cyan-500/50 rounded-xl py-4 text-cyan-300 text-xl active:bg-cyan-500/20" aria-label="Steer left">◀</button>
+        <button id="pr-gas" class="col-span-2 bg-navy border border-emerald-500/50 rounded-xl py-4 text-emerald-300 text-sm font-bold tracking-wider active:bg-emerald-500/20" aria-label="Accelerate">GAS</button>
+        <button id="pr-brake" class="bg-navy border border-rose-500/50 rounded-xl py-4 text-rose-300 text-sm font-bold tracking-wider active:bg-rose-500/20" aria-label="Brake">BRAKE</button>
+        <button id="pr-right" class="touch-btn bg-navy border border-cyan-500/50 rounded-xl py-4 text-cyan-300 text-xl active:bg-cyan-500/20" aria-label="Steer right">▶</button>
+        <span></span>
+        <button id="pr-hand" class="col-span-2 bg-navy border border-amber-500/50 rounded-xl py-3 text-amber-300 text-sm font-bold tracking-wider active:bg-amber-500/20" aria-label="Handbrake">HANDBRAKE</button>
+        <span></span>
+      </div>
+      <p class="text-center text-xs text-slate-500 mt-3">Up / W accelerates · Left-Right / A-D steer · Space handbrake · R restarts · Pass checkpoints in order, hit ramps for boosts, avoid barriers</p>
+    </div>
+    <!-- @section: sky-rush-ui -->
+    <div id="skyRushUI" class="hidden mt-6">
+      <div class="flex items-center justify-center gap-4 flex-wrap">
+        <div class="rounded-xl border border-amber-500/40 bg-navy px-4 py-2 text-center"><span class="text-[10px] tracking-widest text-slate-400 block">SCORE</span><span id="srScore" class="font-display font-bold text-amber-300 text-lg">0</span></div>
+        <div class="rounded-xl border border-cyan-500/40 bg-navy px-4 py-2 text-center"><span class="text-[10px] tracking-widest text-slate-400 block">TIME</span><span id="srTime" class="font-display font-bold text-cyan-300 text-lg">30.0s</span></div>
+        <div class="rounded-xl border border-violet-500/40 bg-navy px-4 py-2 text-center"><span class="text-[10px] tracking-widest text-slate-400 block">LEVEL</span><span id="srLevel" class="font-display font-bold text-violet-300 text-lg">1</span></div>
+        <div class="rounded-xl border border-emerald-500/40 bg-navy px-4 py-2 text-center"><span class="text-[10px] tracking-widest text-slate-400 block">RINGS</span><span id="srRings" class="font-display font-bold text-emerald-300 text-lg">0 / 5</span></div>
+      </div>
+      <div class="mt-4 grid grid-cols-4 gap-2 w-72 max-w-full mx-auto sm:hidden select-none">
+        <span></span>
+        <button id="sr-up" class="touch-btn bg-navy border border-cyan-500/50 rounded-xl py-4 text-cyan-300 text-xl active:bg-cyan-500/20" aria-label="Fly up">▲</button>
+        <span></span>
+        <button id="sr-left" class="touch-btn bg-navy border border-cyan-500/50 rounded-xl py-4 text-cyan-300 text-xl active:bg-cyan-500/20" aria-label="Fly left">◀</button>
+        <button id="sr-down" class="touch-btn bg-navy border border-cyan-500/50 rounded-xl py-4 text-cyan-300 text-xl active:bg-cyan-500/20" aria-label="Fly down">▼</button>
+        <button id="sr-right" class="touch-btn bg-navy border border-cyan-500/50 rounded-xl py-4 text-cyan-300 text-xl active:bg-cyan-500/20" aria-label="Fly right">▶</button>
+      </div>
+      <p class="text-center text-xs text-slate-500 mt-3">WASD / arrows steer · fly through every golden ring before the timer hits zero · avoid grey pylons · each level raises the ring target and adds obstacles</p>
+    </div>
+    <div class="mt-8 rounded-2xl border border-slate-700/60 bg-navy p-6">
+      <h2 class="font-display font-bold text-white mb-2">HOW TO PLAY</h2>
+      <p class="text-slate-400 text-sm">Steer the serpent with the arrow keys or WASD. Each energy cell you collect adds +10 score and grows your tail. The game speeds up every 5 cells. On mobile, use the on-screen pad or swipe on the game area.</p>
+    </div>
+  </div>
+</section>
+
+<!-- @section: favorites -->
+<section id="page-favorites" class="page hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+    <h1 class="font-display text-3xl sm:text-4xl font-black text-white mb-2">YOUR <span class="text-rose-400">FAVORITES</span></h1>
+    <p class="text-slate-400 mb-8">Games you've saved. Hearts persist between visits on this device.</p>
+    <div id="favList" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    <div id="favEmpty" class="hidden text-center py-20 text-slate-400"><p class="text-5xl mb-4">💔</p><p class="font-display text-xl text-white mb-1">NO FAVORITES YET</p><p>Tap the heart on any game card to save it here.</p><a href="#/games" class="inline-block mt-6 btn-neon text-void font-bold px-8 py-3 rounded-xl" style="color:#05070d">BROWSE GAMES</a></div>
+  </div>
+</section>
+
+<!-- @section: leaderboard -->
+<section id="page-leaderboard" class="page hidden">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+    <h1 class="font-display text-3xl sm:text-4xl font-black text-white mb-2">GLOBAL <span class="text-amber-400">LEADERBOARD</span></h1>
+    <p class="text-slate-400 mb-8">Your personal high scores are saved locally and shown alongside the zone's elite.</p>
+    <div class="flex flex-wrap gap-2 mb-6" id="lbFilters">
+      <button class="lb-filter active px-4 py-2 rounded-full text-sm font-semibold border bg-cyan-500/15 border-cyan-500/60 text-cyan-300 transition" data-game="all">All Games</button>
+      <button class="lb-filter px-4 py-2 rounded-full text-sm font-semibold border border-slate-700 text-slate-400 transition" data-game="neon-serpent">Neon Serpent</button>
+      <button class="lb-filter px-4 py-2 rounded-full text-sm font-semibold border border-slate-700 text-slate-400 transition" data-game="neon-circuit">Neon Circuit</button>
+      <button class="lb-filter px-4 py-2 rounded-full text-sm font-semibold border border-slate-700 text-slate-400 transition" data-game="cosmic-wave">Cosmic Wave</button>
+    </div>
+    <div class="overflow-x-auto rounded-2xl border border-slate-700/60">
+      <table class="w-full text-left min-w-[640px]">
+        <thead class="bg-navy text-[11px] uppercase tracking-widest text-slate-400">
+          <tr><th class="px-6 py-4">Rank</th><th class="px-6 py-4">Player</th><th class="px-6 py-4">Score</th><th class="px-6 py-4">Game</th><th class="px-6 py-4">Date</th></tr>
+        </thead>
+        <tbody id="lbBody" class="divide-y divide-slate-800 bg-navy2/50 text-sm"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- @section: profile -->
+<section id="page-profile" class="page hidden">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+    <!-- Logged-in banner -->
+    <div id="loginState" class="hidden rounded-2xl border border-cyan-500/30 bg-gradient-to-r from-navy2 to-navy p-5 mb-8 flex flex-wrap items-center justify-between gap-4">
+      <p class="text-slate-300">Signed in as <span id="loginWho" class="font-display font-bold text-cyan-300"></span> <span class="text-slate-500 text-sm">(local demo account)</span></p>
+      <button id="logoutBtn" class="border border-rose-500/60 text-rose-400 font-bold px-6 py-2.5 rounded-xl tracking-wider hover:bg-rose-500/10 transition">LOG OUT</button>
+    </div>
+    <div class="rounded-2xl border border-cyan-500/30 bg-gradient-to-r from-navy2 to-navy p-8 flex flex-col sm:flex-row items-center gap-8">
+      <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center font-display font-black text-3xl text-void shadow-glow">P1</div>
+      <div class="flex-1 text-center sm:text-left">
+        <h1 id="profileName" class="font-display text-2xl sm:text-3xl font-black text-white">PLAYER_ONE</h1>
+        <p class="text-cyan-400 font-semibold mb-3">LEVEL <span id="profileLevel">1</span> · ROOKIE GAMER</p>
+        <div class="w-full max-w-md bg-slate-800 rounded-full h-3 overflow-hidden" role="progressbar" aria-label="XP progress">
+          <div id="xpBar" class="h-full bg-gradient-to-r from-cyan-400 to-blue-600 rounded-full transition-all duration-500" style="width:0%"></div>
+        </div>
+        <p class="text-xs text-slate-400 mt-1.5"><span id="profileXp">0</span> XP total · earn XP by playing games and beating high scores</p>
+      </div>
+    </div>
+    <div class="grid sm:grid-cols-3 gap-5 mt-8">
+      <div class="rounded-xl border border-slate-700/60 bg-navy p-6 text-center"><p class="font-display text-3xl font-black text-cyan-400" id="statGames">0</p><p class="text-xs tracking-widest text-slate-400 mt-1">GAMES PLAYED</p></div>
+      <div class="rounded-xl border border-slate-700/60 bg-navy p-6 text-center"><p class="font-display text-3xl font-black text-amber-400" id="statHigh">0</p><p class="text-xs tracking-widest text-slate-400 mt-1">BEST HIGH SCORE</p></div>
+      <div class="rounded-xl border border-slate-700/60 bg-navy p-6 text-center"><p class="font-display text-3xl font-black text-rose-400" id="statFavs">0</p><p class="text-xs tracking-widest text-slate-400 mt-1">FAVORITES</p></div>
+    </div>
+    <h2 class="font-display text-xl font-bold text-white mt-10 mb-5">HIGH SCORES</h2>
+    <div id="profileScores" class="grid sm:grid-cols-2 gap-4"></div>
+    <h2 class="font-display text-xl font-bold text-white mt-10 mb-5">ACHIEVEMENTS</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4" id="achievementsGrid"></div>
+
+    <!-- @section: profile-login -->
+    <div id="loginPanel" class="mt-12 rounded-2xl border border-slate-700/60 bg-navy p-7">
+      <h2 class="font-display text-xl font-bold text-white mb-1">PLAYER <span class="text-cyan-400">LOGIN</span></h2>
+      <p class="text-slate-400 text-sm mb-6">Demo account stored locally in your browser — no real credentials are sent anywhere.</p>
+      <form id="loginForm" class="grid sm:grid-cols-3 gap-4" novalidate>
+        <div>
+          <label for="loginUser" class="block text-sm font-semibold uppercase tracking-wider text-slate-300 mb-2">Username</label>
+          <input id="loginUser" type="text" maxlength="16" placeholder="PLAYER_ONE" class="w-full bg-navy2 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500">
+        </div>
+        <div>
+          <label for="loginEmail" class="block text-sm font-semibold uppercase tracking-wider text-slate-300 mb-2">Email</label>
+          <input id="loginEmail" type="email" placeholder="you@example.com" class="w-full bg-navy2 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500">
+        </div>
+        <div>
+          <label for="loginPass" class="block text-sm font-semibold uppercase tracking-wider text-slate-300 mb-2">Password</label>
+          <input id="loginPass" type="password" placeholder="••••••••" class="w-full bg-navy2 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500">
+        </div>
+        <div class="sm:col-span-3 flex flex-wrap gap-3 pt-1">
+          <button type="button" id="loginBtn" class="btn-neon text-void font-bold px-7 py-3 rounded-xl tracking-wider" style="color:#05070d">LOG IN</button>
+          <button type="button" id="createBtn" class="border border-cyan-500/60 text-cyan-300 font-bold px-7 py-3 rounded-xl tracking-wider hover:bg-cyan-500/10 transition">CREATE ACCOUNT</button>
+        </div>
+      </form>
+      <p id="loginMsg" class="hidden mt-4 font-semibold"></p>
+    </div>
+  </div>
+</section>
+
+<!-- @section: about -->
+<section id="page-about" class="page hidden">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+    <h1 class="font-display text-3xl sm:text-4xl font-black text-white mb-6">ABOUT <span class="text-cyan-400">THE ZONE</span></h1>
+    <p class="text-slate-300 text-lg mb-4">THE GAMING ZONE is an original browser gaming portal. Every game in our catalog is built in-house — no ports, no clones, no external embeds. Our goal is simple: instant, high-quality games you can play in seconds on any device.</p>
+    <p class="text-slate-400 mb-4">The platform ships with a modular game engine architecture. Games load only when you launch them, keeping the site fast. Progress, favorites, high scores and achievements are stored locally on your device — no account required.</p>
+    <h2 class="font-display text-xl font-bold text-white mt-8 mb-3">ROADMAP</h2>
+    <ul class="space-y-2.5 text-slate-300">
+      <li class="flex gap-3"><span class="text-emerald-400 font-bold">✔</span> Platform infrastructure: library, search, favorites, leaderboards, profile & achievements</li>
+      <li class="flex gap-3"><span class="text-emerald-400 font-bold">✔</span> NEON SERPENT — our first fully playable original game</li>
+      <li class="flex gap-3"><span class="text-slate-500">◻</span> BLOCKWORLD, NEON CIRCUIT, HIGHWAY ESCAPE, NEON FLIGHT, CRAFTVERSE & COSMIC WAVE</li>
+      <li class="flex gap-3"><span class="text-slate-500">◻</span> Multiplayer events and seasonal leaderboards</li>
+    </ul>
+    <div id="page-privacy" class="mt-12 pt-10 border-t border-slate-800">
+      <h2 class="font-display text-xl font-bold text-white mb-3">PRIVACY</h2>
+      <p class="text-slate-400">We store your favorites, scores and settings in your browser's local storage only. Nothing is sent to a server, and no personal data is collected.</p>
+    </div>
+    <div id="page-terms" class="mt-12 pt-10 border-t border-slate-800">
+      <h2 class="font-display text-xl font-bold text-white mb-3">TERMS</h2>
+      <p class="text-slate-400">THE GAMING ZONE is provided for personal entertainment. All games and artwork are original creations. Fair play is expected on the leaderboards.</p>
+    </div>
+  </div>
+</section>
+
+<!-- @section: settings -->
+<section id="page-settings" class="page hidden">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 py-12">
+    <h1 class="font-display text-3xl sm:text-4xl font-black text-white mb-2">SETTINGS</h1>
+    <p class="text-slate-400 mb-8">Stored locally on your device.</p>
+    <form id="settingsForm" class="space-y-6 rounded-2xl border border-slate-700/60 bg-navy p-7">
+      <div>
+        <label for="setUsername" class="block text-sm font-semibold uppercase tracking-wider text-slate-300 mb-2">Username</label>
+        <input id="setUsername" type="text" maxlength="16" placeholder="PLAYER_ONE" class="w-full bg-navy2 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500">
+      </div>
+      <div class="flex items-center justify-between">
+        <label for="setSound" class="font-semibold text-slate-300">Game sound effects</label>
+        <input id="setSound" type="checkbox" checked class="w-5 h-5 accent-cyan-400">
+      </div>
+      <div class="flex items-center justify-between">
+        <label for="setReduce" class="font-semibold text-slate-300">Reduce animations</label>
+        <input id="setReduce" type="checkbox" class="w-5 h-5 accent-cyan-400">
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="submit" class="btn-neon text-void font-bold px-7 py-3 rounded-xl tracking-wider" style="color:#05070d">SAVE SETTINGS</button>
+        <button type="button" id="resetData" class="border border-rose-500/60 text-rose-400 font-bold px-7 py-3 rounded-xl tracking-wider hover:bg-rose-500/10 transition">RESET ALL DATA</button>
+      </div>
+      <p id="settingsMsg" class="hidden text-emerald-400 font-semibold">✓ Settings saved.</p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<!-- @section: footer -->
+<footer class="border-t border-cyan-500/20 bg-navy mt-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-14 grid md:grid-cols-3 gap-10">
+    <div>
+      <a href="#/home" class="flex items-center gap-2.5 mb-4">
+        <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center"><svg class="w-4 h-4 text-void" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 12h4M8 10v4"/><path d="M17.5 5H6.5a4.5 4.5 0 0 0-4.4 5.4l1 5A4.5 4.5 0 0 0 7.5 19h9a4.5 4.5 0 0 0 4.4-3.6l1-5A4.5 4.5 0 0 0 17.5 5z"/></svg></span>
+        <span class="font-display font-bold tracking-widest text-white text-sm">THE GAMING <span class="text-cyan-400">ZONE</span></span>
+      </a>
+      <p class="text-slate-400 text-sm max-w-xs">Play. Compete. Have fun. Original browser games, built for speed and style.</p>
+    </div>
+    <div>
+      <h3 class="font-display font-bold text-white text-sm tracking-widest mb-4">LINKS</h3>
+      <ul class="space-y-2.5 text-sm">
+        <li><a href="#/games" class="text-slate-400 hover:text-cyan-400 transition">Games</a></li>
+        <li><a href="#/about" class="text-slate-400 hover:text-cyan-400 transition">About</a></li>
+        <li><a href="#/about" class="text-slate-400 hover:text-cyan-400 transition">Privacy</a></li>
+        <li><a href="#/about" class="text-slate-400 hover:text-cyan-400 transition">Terms</a></li>
+        <li><a href="mailto:hello@thegamingzone.example" class="text-slate-400 hover:text-cyan-400 transition">Contact: hello@thegamingzone.example</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="font-display font-bold text-white text-sm tracking-widest mb-4">STAY IN THE GAME</h3>
+      <p class="text-slate-400 text-sm mb-3">Get notified when new games drop in the Zone.</p>
+      <form id="newsletterForm" class="flex gap-2" novalidate>
+        <input id="newsletterEmail" type="email" placeholder="you@example.com" class="flex-1 min-w-0 bg-navy2 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-cyan-500" aria-label="Email address">
+        <button class="btn-neon text-void font-bold text-sm px-5 py-2.5 rounded-xl" style="color:#05070d">JOIN</button>
+      </form>
+      <p id="newsletterMsg" class="hidden text-emerald-400 text-sm mt-2">✓ You're on the list!</p>
+    </div>
+  </div>
+  <div class="border-t border-slate-800 py-5 text-center text-xs text-slate-500 tracking-widest uppercase">© 2026 THE GAMING ZONE</div>
+</footer>
+
+<script>
+/* ============ Utilities & local data layer ============ */
+/* Safe storage: never throws, in-memory fallback if storage is blocked */
+const _mem = {};
+const _safeLS = {
+  getItem(k){ try { return localStorage.getItem(k); } catch(e){ return _mem[k] ?? null; } },
+  setItem(k,v){ try { localStorage.setItem(k,v); } catch(e){ _mem[k] = v; } },
+  removeItem(k){ try { localStorage.removeItem(k); } catch(e){ delete _mem[k]; } }
+};
+const _safeSS = {
+  getItem(k){ try { return sessionStorage.getItem(k); } catch(e){ return null; } },
+  setItem(k,v){ try { sessionStorage.setItem(k,v); } catch(e){} }
+};
+const store = {
+  get(k, d){ try{ return JSON.parse(_safeLS.getItem('tgz_'+k)) ?? d }catch(e){ return d } },
+  set(k, v){ try { _safeLS.setItem('tgz_'+k, JSON.stringify(v)) }catch(e){} }
+};
+let favs = store.get('favs', []);
+
+/* Centralized game data */
+const GAMES = {
+  'blockworld': { title:'BLOCKWORLD', cat:'Adventure / Sandbox', rating:4.8, desc:'Explore a block-based world, collect resources and build your own structures.', how:'Roam the voxel landscape, mine blocks for resources and place them to build anything you can imagine.' },
+  'neon-circuit': { title:'NEON CIRCUIT', cat:'Racing', rating:4.7, desc:'Race through futuristic neon tracks, beat your best times and master difficult tracks.', how:'Stay on the glowing track, hit boost pads and shave seconds off your lap times across three tiers of circuits.' },
+  'highway-escape': { title:'HIGHWAY ESCAPE', cat:'Action / Racing', rating:4.5, desc:'Drive through busy highways while avoiding obstacles and escaping fictional pursuers.', how:'Weave through dense traffic at high speed. Near misses fill your escape meter; one crash ends the run.' },
+  'neon-flight': { title:'NEON FLIGHT', cat:'Arcade', rating:4.6, desc:'Pilot a futuristic aircraft through dangerous obstacles and collect energy rings.', how:'Fly through moving gates and collect golden rings for bonus points. Each ring extends your fuel slightly.' },
+  'craftverse': { title:'CRAFTVERSE', cat:'Simulation / Adventure', rating:4.4, desc:'Collect resources, craft objects and build your own small world.', how:'Gather wood, stone and ore, combine them at the workbench and unlock blueprints to expand your tiny world.' },
+  'cosmic-wave': { title:'COSMIC WAVE', cat:'Arcade', rating:4.8, desc:'Control a futuristic spacecraft and survive increasingly difficult waves of obstacles.', how:'Survive wave after wave of asteroid clusters. Difficulty ramps every 30 seconds — dodge or perish.' },
+  'voxel-sandbox': { title:'VOXEL SANDBOX', cat:'Adventure / Sandbox', rating:4.7, desc:'An original block-building and exploration game — shape a voxel world of your own.', how:'Explore a generated voxel island: grassy hills, sandy shores, trees and glowing crystals. Mine any block, then build whatever you imagine with 8 original block types. Your world saves automatically on this device.', controls:['WASD / Arrow keys — move','Mouse (click game to lock) or drag — look around','Left click / MINE — remove the targeted block','Right click / PLACE — place the selected block','1–8 or hotbar — select block type','Space / JUMP — jump','P — pause'] },
+  'low-poly-racing': { title:'LOW-POLY RACING', cat:'Racing', rating:4.8, desc:'An original fast racing game with tracks, ramps and obstacles — chase your best lap.', how:'Race three laps around stylized low-poly circuits. Hit ramps for air-time bonuses, dodge track obstacles and beat your best lap time.', controls:['Arrow keys / WASD — steer & accelerate','Shift — boost','R — restart race','P — pause'] },
+  'arcade-flight': { title:'ARCADE FLIGHT', cat:'Arcade', rating:4.6, desc:'An original fast flying game — thread obstacles and hit checkpoints at speed.', how:'Pilot a jet through canyon obstacles and pass glowing checkpoints before the timer runs out. Each checkpoint adds time and score.', controls:['Arrow keys / WASD — pitch & steer','Shift — boost','P — pause'] },
+  'space-reflex': { title:'SPACE REFLEX', cat:'Arcade', rating:4.7, desc:'An original spaceship obstacle-dodging game — pure reflexes, pure speed.', how:'Steer your ship through an endless stream of asteroid fields. The longer you survive, the faster it gets. One hit ends the run.', controls:['Arrow keys / WASD or mouse — steer','Space — dash (brief invincibility)','P — pause'] },
+  'precision-target': { title:'PRECISION TARGET', cat:'Casual', rating:4.5, desc:'An original arcade target game — accuracy scoring across timed rounds.', how:'Targets appear across the range for a limited time. Hit them dead-center for bonus accuracy points. Misses cost accuracy — 60 seconds per round.', controls:['Mouse — aim','Click — shoot','R — restart round'] },
+  'crafting-adventure': { title:'CRAFTING ADVENTURE', cat:'Simulation / Adventure', rating:4.4, desc:'An original crafting, building and exploration game — gather, craft, create.', how:'Roam a small open world, harvest wood, stone and ore, then combine resources at the workbench to craft tools and build your settlement.', controls:['WASD / Arrow keys — move','E — open crafting menu','Click — gather / place','I — inventory'] },
+  'sky-rush': { title:'SKY RUSH', cat:'Arcade', rating:4.7, desc:'An original futuristic arcade flight game — fly through energy rings, dodge obstacles and survive rising levels.', how:'Fly through every golden energy ring to score and reach the level target before time runs out. Each level adds more obstacles and raises the ring target. One collision ends the flight.', controls:['Arrow keys / WASD — steer up, down, left & right','R — restart flight','P — pause','On-screen buttons — mobile controls'] },
+  'poly-rush': { title:'POLY RUSH', cat:'Racing', rating:4.8, desc:'A brand-new low-poly arcade racer — carve neon corners, hit ramps and beat your lap records.', how:'Complete 3 laps around the neon circuit. Pass every checkpoint in order, hit glowing ramps for a boost, and avoid barriers — one crash sends you back to the last checkpoint. Off-track surfaces slow you down, so stay on the asphalt!', controls:['Arrow keys / WASD — steer & accelerate','Space — handbrake (tight turns)','R — restart race','P — pause','On-screen buttons — mobile controls'] },
+  'neon-serpent': { title:'NEON SERPENT', cat:'Arcade', rating:4.9, desc:'Control a glowing serpent, collect energy and survive as long as possible.', how:'Steer the serpent with arrow keys / WASD, swipe on mobile or use the touch pad. Collect glowing cells for +10 points. Every 5 cells speeds the game up. Hitting a wall or your own tail ends the run.', controls:['Arrow keys / WASD — steer the serpent','P — pause / resume','On-screen D-pad or swipe — mobile controls'] }
+};
+const THUMBS = {}; // filled below with svg strings reused from cards
+document.querySelectorAll('.game-card > a svg').forEach(svg => {
+  const id = svg.closest('.game-card').querySelector('.fav-toggle').dataset.id;
+  THUMBS[id] = svg.outerHTML;
+});
+
+/* ============ Mobile menu ============ */
+const menuBtn = document.getElementById('menuBtn'), mobileMenu = document.getElementById('mobileMenu');
+menuBtn.addEventListener('click', () => {
+  const open = mobileMenu.classList.toggle('hidden') === false;
+  menuBtn.setAttribute('aria-expanded', open);
+});
+mobileMenu.addEventListener('click', e => { if (e.target.closest('a')) { mobileMenu.classList.add('hidden'); menuBtn.setAttribute('aria-expanded','false'); } });
+
+/* ============ Direct router (geen hash afhankelijkheid) ============ */
+const pages = ['home','games','game','play','favorites','leaderboard','profile','about','settings'];
+let currentPage = 'home';
+function go(name, param){
+  try { stopGame(); } catch(err){ console.error('stopGame error:', err); }
+
+  if (name === 'game' && param && GAMES[param]) {
+    try { fillDetail(param); } catch(err){ console.error('fillDetail error:', err); }
+    show('game');
+  } else if (name === 'play' && param && GAMES[param]) {
+    show('play');
+    try { launchGame(param); } catch(err){ console.error('launchGame error:', err); }
+  } else if (name === 'privacy' || name === 'terms') {
+    show('about');
+  } else if (pages.includes(name)) {
+    show(name);
+    try {
+      if(name==='favorites') renderFavs();
+      if(name==='leaderboard') renderLB();
+      if(name==='profile') renderProfile();
+    } catch(err){ console.error('render error for', name, err); }
+  } else {
+    show('home');
+  }
+  currentPage = name;
+  window.scrollTo({top:0});
+}
+function show(name){
+  pages.forEach(p => document.getElementById('page-'+p)?.classList.add('hidden'));
+  const el = document.getElementById('page-'+name);
+  el.classList.remove('hidden'); el.classList.add('active');
+  // sync active state on nav links
+  const navName = ['game','play'].includes(name) ? 'games' : (['privacy','terms'].includes(name) ? 'about' : name);
+  document.querySelectorAll('.nav-link').forEach(a => {
+    const target = (a.getAttribute('href')||'').replace('#/','');
+    a.classList.toggle('text-cyan-400', target === navName);
+    a.classList.toggle('text-slate-300', target !== navName);
+  });
+}
+/* Game card & play links: single authoritative direct-DOM navigation (capture phase).
+   Guarantees every existing game card, the detail PLAY button and the detail
+   FULLSCREEN flow work without relying on hash navigation at all. */
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href^="#/game/"], a[href^="#/play/"]');
+  if (!a || a.target === '_blank') return;
+  e.preventDefault();
+  e.stopImmediatePropagation();
+  const [, kind, id] = a.getAttribute('href').split('/');
+  try {
+    if (kind === 'game' && GAMES[id]) {
+      try { stopGame(); } catch(err){}
+      try { fillDetail(id); } catch(err){ console.error('fillDetail error:', err); }
+      show('game');
+      currentPage = 'game';
+    } else if (kind === 'play' && GAMES[id]) {
+      show('play');
+      currentPage = 'play';
+      try { launchGame(id); } catch(err){ console.error('launchGame error:', err); }
+    } else {
+      show('games');
+      currentPage = 'games';
+      return;
+    }
+    window.scrollTo({top:0});
+  } catch(err){ console.error('game card navigation error:', err); }
+}, true);
+
+/* Alle interne links: #/games → go('games'), #/play/neon-serpent → go('play','neon-serpent') */
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href^="#/"]');
+  if (!a || a.target === '_blank') return;
+  e.preventDefault();
+  const parts = a.getAttribute('href').replace('#/','').split('/');
+  try { go(parts[0], parts[1]); } catch(err) { console.error('navigation error:', err); }
+  // mobiel menu dichtklappen na navigatie
+  mobileMenu.classList.add('hidden');
+  menuBtn.setAttribute('aria-expanded','false');
+});
+
+/* ============ Game detail ============ */
+function fillDetail(id){
+  const g = GAMES[id];
+  document.getElementById('detailThumb').innerHTML = THUMBS[id] || '';
+  document.getElementById('detailTitle').textContent = g.title;
+  document.getElementById('detailCat').textContent = g.cat.toUpperCase();
+  document.getElementById('detailRating').textContent = '★ ' + g.rating.toFixed(1);
+  document.getElementById('detailDesc').textContent = g.desc;
+  document.getElementById('detailHow').textContent = g.how;
+  const ctrl = g.controls || ['Keyboard — gameplay controls','Mouse / touch — where supported','P — pause'];
+  document.getElementById('detailControls').innerHTML = ctrl.map(c => `<li class="flex gap-3"><span class="text-cyan-400 font-bold">▸</span>${c}</li>`).join('');
+  document.getElementById('detailPlay').setAttribute('href', '#/play/'+id);
+  document.querySelector('#page-game .fav-toggle').dataset.id = id;
+  currentDetailId = id;
+  renderVotes();
+  syncHearts();
+}
+
+/* ============ Game detail: like / dislike + fullscreen play ============ */
+let currentDetailId = 'neon-serpent';
+const DEFAULT_VOTES = 18;
+function votesFor(id){
+  const votes = store.get('votes', {});
+  if (!votes[id]) { votes[id] = { u: DEFAULT_VOTES + (id.length % 7), d: 1 + (id.length % 3) }; store.set('votes', votes); }
+  return votes[id];
+}
+function renderVotes(){
+  const v = votesFor(currentDetailId);
+  const my = (store.get('myvote', {})[currentDetailId]) || 0;
+  document.getElementById('likeCount').textContent = v.u;
+  document.getElementById('dislikeCount').textContent = v.d;
+  const on = 'flex-1 flex items-center justify-center gap-1.5 border rounded-xl py-2.5 font-semibold transition border-emerald-500 text-emerald-300 bg-emerald-500/10';
+  const onD = 'flex-1 flex items-center justify-center gap-1.5 border rounded-xl py-2.5 font-semibold transition border-rose-500 text-rose-300 bg-rose-500/10';
+  const off = 'flex-1 flex items-center justify-center gap-1.5 border rounded-xl py-2.5 font-semibold transition border-slate-600 text-slate-300 ';
+  document.getElementById('likeBtn').className = my===1 ? on : off + 'hover:border-emerald-500';
+  document.getElementById('dislikeBtn').className = my===-1 ? onD : off + 'hover:border-rose-500';
+}
+document.getElementById('likeBtn').addEventListener('click', () => {
+  const votes = store.get('votes', {}), myvote = store.get('myvote', {});
+  const v = votesFor(currentDetailId), my = myvote[currentDetailId] || 0;
+  if (my === 1){ v.u--; myvote[currentDetailId] = 0; }
+  else { if (my === -1) v.d--; v.u++; myvote[currentDetailId] = 1; }
+  store.set('votes', votes); store.set('myvote', myvote); renderVotes();
+});
+document.getElementById('dislikeBtn').addEventListener('click', () => {
+  const votes = store.get('votes', {}), myvote = store.get('myvote', {});
+  const v = votesFor(currentDetailId), my = myvote[currentDetailId] || 0;
+  if (my === -1){ v.d--; myvote[currentDetailId] = 0; }
+  else { if (my === 1) v.u--; v.d++; myvote[currentDetailId] = -1; }
+  store.set('votes', votes); store.set('myvote', myvote); renderVotes();
+});
+document.getElementById('detailFull').addEventListener('click', () => {
+  show('play');
+  try { launchGame(currentDetailId); } catch(err){ console.error('launchGame error:', err); }
+  currentPage = 'play';
+  /* Fullscreen may be blocked by the preview's permissions policy — never throw. */
+  try {
+    const stage = document.getElementById('shellStage');
+    const p = stage.requestFullscreen && stage.requestFullscreen();
+    if (p && p.catch) p.catch(function(){ console.warn('Fullscreen blocked by permissions policy'); });
+  } catch(err){ console.warn('Fullscreen unavailable:', err); }
+});
+
+/* ============ Favorites ============ */
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.fav-toggle');
+  if (!btn) return;
+  const id = btn.dataset.id;
+  favs = favs.includes(id) ? favs.filter(f => f!==id) : [...favs, id];
+  store.set('favs', favs); syncHearts();
+});
+function syncHearts(){
+  document.querySelectorAll('.fav-toggle').forEach(b => b.classList.toggle('fav', favs.includes(b.dataset.id)));
+  if (currentPage === 'favorites') renderFavs();
+}
+const CARD_PROTO = document.querySelector('.game-card');
+function renderFavs(){
+  const list = document.getElementById('favList');
+  list.innerHTML = '';
+  document.getElementById('favEmpty').classList.toggle('hidden', favs.length > 0);
+  favs.forEach(id => {
+    const orig = document.querySelector(`.game-card .fav-toggle[data-id="${id}"]`)?.closest('.game-card');
+    if (!orig) return;
+    const clone = orig.cloneNode(true);
+    clone.dataset.favClone = '1';
+    list.appendChild(clone);
+    const rm = document.createElement('button');
+    rm.className = 'w-full mt-2 border border-rose-500/50 text-rose-400 font-semibold text-sm py-2 rounded-lg hover:bg-rose-500/10 transition';
+    rm.textContent = '♥ Remove from Favorites';
+    rm.addEventListener('click', () => { favs = favs.filter(f=>f!==id); store.set('favs',favs); renderFavs(); syncHearts(); });
+    clone.querySelector('.mt-auto').appendChild(rm);
+  });
+}
+
+/* ============ Games page: search / filter / sort ============ */
+let activeCat = 'all';
+const grid = document.getElementById('gamesGrid');
+function applyFilters(){
+  const q = document.getElementById('gameSearch').value.toLowerCase().trim();
+  const sort = document.getElementById('gameSort').value;
+  const cards = [...grid.querySelectorAll('.game-card:not([data-fav-clone])')];
+  let visible = 0;
+  cards.forEach(c => {
+    const hay = (c.dataset.title + ' ' + c.dataset.cat + ' ' + c.dataset.desc).toLowerCase();
+    const match = (activeCat==='all' || c.dataset.cat===activeCat) && (!q || hay.includes(q));
+    c.style.display = match ? '' : 'none';
+    if (match) visible++;
+  });
+  const key = sort==='rating' ? c=>parseFloat(c.dataset.rating) : c=>c.dataset.title;
+  cards.sort((a,b)=> sort==='rating' ? key(b)-key(a) : String(key(a)).localeCompare(key(b))).forEach(c=>grid.appendChild(c));
+  document.getElementById('noResults').classList.toggle('hidden', visible>0);
+  document.getElementById('gameCount').textContent = `(${visible})`;
+}
+document.getElementById('gameSearch').addEventListener('input', applyFilters);
+document.getElementById('gameSort').addEventListener('change', applyFilters);
+document.getElementById('categoryFilters').addEventListener('click', e => {
+  const b = e.target.closest('.filter-btn'); if(!b) return;
+  activeCat = b.dataset.cat;
+  document.querySelectorAll('.filter-btn').forEach(x => x.className = 'filter-btn px-4 py-2 rounded-full text-sm font-semibold border transition border-slate-700 text-slate-400 hover:border-cyan-500/50');
+  b.className = 'filter-btn active px-4 py-2 rounded-full text-sm font-semibold border transition bg-cyan-500/15 border-cyan-500/60 text-cyan-300';
+  applyFilters();
+});
+
+/* ============ Leaderboard ============ */
+const EXAMPLE_LB = [
+  {p:'NexusX', s:12480, g:'Neon Serpent', gid:'neon-serpent', d:'2026-01-18'},
+  {p:'VoidGamer', s:11950, g:'Neon Serpent', gid:'neon-serpent', d:'2026-01-17'},
+  {p:'PixelHawk', s:10320, g:'Neon Serpent', gid:'neon-serpent', d:'2026-01-16'},
+  {p:'GlitchLord', s:9870, g:'Neon Serpent', gid:'neon-serpent', d:'2026-01-15'},
+  {p:'TurboKat', s:8760, g:'Neon Circuit', gid:'neon-circuit', d:'2026-01-14'},
+  {p:'NovaByte', s:8120, g:'Cosmic Wave', gid:'cosmic-wave', d:'2026-01-13'},
+  {p:'ZedRunner', s:7650, g:'Neon Circuit', gid:'neon-circuit', d:'2026-01-12'},
+  {p:'CryoMiss', s:6980, g:'Cosmic Wave', gid:'cosmic-wave', d:'2026-01-11'},
+];
+let lbFilter = 'all';
+function renderLB(){
+  const mine = Object.entries(store.get('scores',{})).map(([gid,s]) => ({p: store.get('username','YOU') + ' (you)', s, g:GAMES[gid]?.title||gid, gid, d:'Today', me:true}));
+  let rows = [...EXAMPLE_LB, ...mine].filter(r => lbFilter==='all' || r.gid===lbFilter).sort((a,b)=>b.s-a.s);
+  const medals = ['text-amber-400','text-slate-300','text-orange-500'];
+  document.getElementById('lbBody').innerHTML = rows.map((r,i) =>
+    `<tr class="${r.me?'bg-cyan-500/5':''}"><td class="px-6 py-4 font-display font-bold ${medals[i]||'text-slate-500'}">${i+1}</td>
+     <td class="px-6 py-4 font-semibold ${r.me?'text-cyan-300':'text-white'}">${r.p}</td>
+     <td class="px-6 py-4 text-amber-300 font-semibold">${r.s.toLocaleString()}</td>
+     <td class="px-6 py-4 text-slate-400">${r.g}</td><td class="px-6 py-4 text-slate-500">${r.d}</td></tr>`).join('');
+}
+document.getElementById('lbFilters').addEventListener('click', e => {
+  const b = e.target.closest('.lb-filter'); if(!b) return;
+  lbFilter = b.dataset.game;
+  document.querySelectorAll('.lb-filter').forEach(x => x.className = 'lb-filter px-4 py-2 rounded-full text-sm font-semibold border border-slate-700 text-slate-400 transition');
+  b.className = 'lb-filter active px-4 py-2 rounded-full text-sm font-semibold border bg-cyan-500/15 border-cyan-500/60 text-cyan-300 transition';
+  renderLB();
+});
+
+/* ============ Profile / achievements / XP ============ */
+const ACH = [
+  {id:'first', name:'FIRST GAME', icon:'🎮', desc:'Play your first game'},
+  {id:'five', name:'PLAY 5 GAMES', icon:'🕹', desc:'Play 5 game sessions'},
+  {id:'highscore', name:'HIGH SCORE', icon:'🏆', desc:'Score 100+ in any game'},
+  {id:'racing', name:'RACING MASTER', icon:'🏁', desc:'Play a racing game'},
+  {id:'arcade', name:'ARCADE MASTER', icon:'⚡', desc:'Play an arcade game'},
+  {id:'speed', name:'SPEED DEMON', icon:'💨', desc:'Score 50+ in a run'},
+  {id:'explorer', name:'EXPLORER', icon:'🧭', desc:'Visit 4 different pages'},
+];
+function grant(id){
+  const a = store.get('ach',[]);
+  if (!a.includes(id)) { store.set('ach',[...a,id]); store.set('xp', store.get('xp',0)+50); }
+}
+function renderProfile(){
+  const xp = store.get('xp',0), level = Math.floor(xp/100)+1;
+  const scores = store.get('scores',{});
+  const played = store.get('played',0);
+  document.getElementById('profileName').textContent = store.get('username','PLAYER_ONE');
+  document.getElementById('profileLevel').textContent = level;
+  document.getElementById('profileXp').textContent = xp;
+  document.getElementById('xpBar').style.width = (xp % 100) + '%';
+  document.getElementById('statGames').textContent = played;
+  document.getElementById('statHigh').textContent = Math.max(0, ...Object.values(scores));
+  document.getElementById('statFavs').textContent = favs.length;
+  const ps = document.getElementById('profileScores');
+  ps.innerHTML = Object.keys(GAMES).map(id => {
+    const g = GAMES[id];
+    return `<div class="rounded-xl border border-slate-700/60 bg-navy p-5 flex justify-between items-center"><div><p class="font-display font-bold text-white">${g.title}</p><p class="text-xs text-slate-500">${g.cat}</p></div><p class="font-display text-xl font-black ${scores[id]?'text-cyan-300':'text-slate-600'}">${scores[id]||'—'}</p></div>`;
+  }).join('');
+  const unlocked = store.get('ach',[]);
+  document.getElementById('achievementsGrid').innerHTML = ACH.map(a => {
+    const u = unlocked.includes(a.id);
+    return `<div class="rounded-xl border p-5 text-center ${u?'border-cyan-500/50 bg-cyan-500/5 shadow-glowsm':'border-slate-800 bg-navy opacity-50'}">
+      <p class="text-3xl mb-2 ${u?'':'grayscale'}">${a.icon}</p>
+      <p class="font-display font-bold text-sm ${u?'text-cyan-300':'text-slate-500'}">${a.name}</p>
+      <p class="text-xs text-slate-500 mt-1">${u?'Unlocked':a.desc}</p></div>`;
+  }).join('');
+}
+
+/* ============ Local demo login (localStorage only) ============ */
+function accountGet(){ return store.get('account', null); }
+function accountSet(acc){ store.set('account', acc); }
+function showLoginMsg(text, ok){
+  const m = document.getElementById('loginMsg');
+  m.textContent = text;
+  m.className = 'mt-4 font-semibold ' + (ok ? 'text-emerald-400' : 'text-rose-400');
+}
+function renderLoginState(){
+  const acc = accountGet();
+  document.getElementById('loginState').classList.toggle('hidden', !acc);
+  document.getElementById('loginPanel').classList.toggle('hidden', !!acc);
+  if (acc){
+    document.getElementById('loginWho').textContent = acc.username;
+    document.getElementById('profileName').textContent = acc.username;
+  }
+}
+function validLoginFields(){
+  const u = document.getElementById('loginUser').value.trim();
+  const em = document.getElementById('loginEmail').value.trim();
+  const pw = document.getElementById('loginPass').value;
+  if (!u){ showLoginMsg('Please enter a username.', false); return null; }
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ showLoginMsg('Please enter a valid email address.', false); return null; }
+  if (pw.length < 4){ showLoginMsg('Password must be at least 4 characters.', false); return null; }
+  return { username: u.toUpperCase(), email: em.toLowerCase() };
+}
+document.getElementById('loginBtn').addEventListener('click', () => {
+  const acc = validLoginFields(); if (!acc) return;
+  const existing = accountGet();
+  if (existing && existing.email !== acc.email){ showLoginMsg('A different account is stored on this device. Log out first or use its email.', false); return; }
+  accountSet(existing ? { ...existing, username: acc.username } : acc);
+  store.set('username', acc.username);
+  showLoginMsg('✓ Welcome back, ' + acc.username + '!', true);
+  renderLoginState(); renderProfile();
+});
+document.getElementById('createBtn').addEventListener('click', () => {
+  const acc = validLoginFields(); if (!acc) return;
+  if (accountGet()){ showLoginMsg('An account already exists on this device. Use Log in instead.', false); return; }
+  accountSet(acc); store.set('username', acc.username);
+  showLoginMsg('✓ Account created — you are signed in!', true);
+  renderLoginState(); renderProfile();
+});
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  store.set('account', null);
+  showLoginMsg('');
+  renderLoginState();
+});
+
+/* ============ Settings ============ */
+const settingsForm = document.getElementById('settingsForm');
+(function initSettings(){
+  document.getElementById('setUsername').value = store.get('username','');
+  document.getElementById('setSound').checked = store.get('sound', true);
+  document.getElementById('setReduce').checked = store.get('reduce', false);
+})();
+settingsForm.addEventListener('submit', e => {
+  e.preventDefault();
+  store.set('username', document.getElementById('setUsername').value.trim().toUpperCase() || 'PLAYER_ONE');
+  store.set('sound', document.getElementById('setSound').checked);
+  store.set('reduce', document.getElementById('setReduce').checked);
+  document.getElementById('settingsMsg').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('settingsMsg').classList.add('hidden'), 2500);
+});
+document.getElementById('resetData').addEventListener('click', () => {
+  try {
+    Object.keys(localStorage).filter(k=>k.startsWith('tgz_')).forEach(k=>localStorage.removeItem(k));
+  } catch(e){}
+  favs = []; syncHearts(); location.reload();
+});
+
+/* Newsletter */
+document.getElementById('newsletterForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const em = document.getElementById('newsletterEmail');
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em.value)) { em.classList.add('border-rose-500'); return; }
+  em.classList.remove('border-rose-500');
+  document.getElementById('newsletterMsg').classList.remove('hidden');
+  em.value = '';
+});
+
+/* ============ GameShell + NEON SERPENT engine ============ */
+const canvas = document.getElementById('gameCanvas'), ctx = canvas.getContext('2d');
+const overlay = document.getElementById('shellOverlay'), overlayTitle = document.getElementById('overlayTitle'),
+      overlayText = document.getElementById('overlayText'), overlayBtn = document.getElementById('overlayBtn');
+let currentGame = null, rafId = null, paused = false;
+
+function stopGame(){ if (currentGame?.stop) currentGame.stop(); currentGame = null; if(rafId) cancelAnimationFrame(rafId); rafId = null; }
+function launchGame(id){
+  document.getElementById('playTitle').innerHTML = (GAMES[id].title.split(' ')[0] + ' <span class="text-cyan-400 neon-text">' + (GAMES[id].title.split(' ').slice(1).join(' ')||'') + '</span>');
+  const isSerpent = id === 'neon-serpent', isVoxel = id === 'voxel-sandbox', isRush = id === 'poly-rush', isSky = id === 'sky-rush';
+  const playable = isSerpent || isVoxel || isRush || isSky;
+  document.getElementById('comingSoon').classList.toggle('hidden', playable);
+  canvas.classList.toggle('hidden', !playable);
+  document.getElementById('touchControls').classList.toggle('hidden', !isSerpent);
+  document.getElementById('voxelUI').classList.toggle('hidden', !isVoxel);
+  document.getElementById('polyRushUI').classList.toggle('hidden', !isRush);
+  document.getElementById('skyRushUI').classList.toggle('hidden', !isSky);
+  document.getElementById('shellPause').disabled = !playable;
+  if (!playable) return;
+  currentGame = isVoxel ? VoxelSandbox() : isRush ? PolyRush() : isSky ? SkyRush() : NeonSerpent();
+  if (isSerpent) grant('arcade');
+  if (isRush) grant('racing');
+  if (isSky) grant('arcade');
+  grant('first');
+  const played = store.get('played',0)+1; store.set('played',played);
+  const visited = new Set(JSON.parse(_safeSS.getItem('tgz_visit')||'[]')); visited.add(id);
+  _safeSS.setItem('tgz_visit', JSON.stringify([...visited]));
+  if (visited.size >= 4) grant('explorer');
+}
+document.getElementById('shellRestart').addEventListener('click', () => currentGame?.restart());
+document.getElementById('shellPause').addEventListener('click', () => currentGame?.togglePause());
+document.getElementById('shellFull').addEventListener('click', () => {
+  /* Fullscreen may be blocked by the preview's permissions policy — never throw. */
+  try {
+    if (document.fullscreenElement) {
+      const p = document.exitFullscreen(); if (p && p.catch) p.catch(()=>{});
+    } else {
+      const p = document.getElementById('shellStage').requestFullscreen && document.getElementById('shellStage').requestFullscreen();
+      if (p && p.catch) p.catch(()=>{ console.warn('Fullscreen blocked by permissions policy'); });
+    }
+  } catch(err){ console.warn('Fullscreen unavailable:', err); }
+});
+overlayBtn.addEventListener('click', () => currentGame?.start());
+
+function setShell(score, high){
+  document.getElementById('shellScore').textContent = score;
+  document.getElementById('shellHigh').textContent = high;
+}
+function showOverlay(title, text, btn){
+  overlayTitle.textContent = title; overlayText.textContent = text; overlayBtn.textContent = btn;
+  overlay.classList.remove('hidden');
+}
+function hideOverlay(){ overlay.classList.add('hidden'); }
+
+function NeonSerpent(){
+  const CELL = 24, COLS = canvas.width/CELL, ROWS = canvas.height/CELL;
+  let snake, dir, nextDir, food, score, speed, tick, alive, running = false;
+  let high = store.get('scores',{})['neon-serpent'] || 0;
+  setShell(0, high);
+
+  function reset(){
+    snake = [{x:8,y:12},{x:7,y:12},{x:6,y:12}];
+    dir = {x:1,y:0}; nextDir = dir; score = 0; speed = 9; tick = 0; alive = true;
+    placeFood(); setShell(0, high); draw();
+  }
+  function placeFood(){
+    do { food = {x: Math.floor(Math.random()*COLS), y: Math.floor(Math.random()*ROWS)}; }
+    while (snake.some(s => s.x===food.x && s.y===food.y));
+  }
+  function draw(){
+    ctx.fillStyle = '#04070f'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle = 'rgba(34,211,238,0.07)'; ctx.lineWidth = 1;
+    for(let i=1;i<COLS;i++){ ctx.beginPath(); ctx.moveTo(i*CELL,0); ctx.lineTo(i*CELL,canvas.height); ctx.stroke(); }
+    for(let i=1;i<ROWS;i++){ ctx.beginPath(); ctx.moveTo(0,i*CELL); ctx.lineTo(canvas.width,i*CELL); ctx.stroke(); }
+    // food
+    ctx.shadowColor = '#f43f5e'; ctx.shadowBlur = 14;
+    ctx.fillStyle = '#f43f5e'; ctx.beginPath(); ctx.arc(food.x*CELL+CELL/2, food.y*CELL+CELL/2, CELL/2-4, 0, 7); ctx.fill();
+    // snake
+    snake.forEach((s,i) => {
+      ctx.shadowColor = '#22d3ee'; ctx.shadowBlur = i===0 ? 16 : 8;
+      ctx.fillStyle = i===0 ? '#67e8f9' : `rgba(34,211,238,${Math.max(0.35, 1 - i/snake.length*0.6)})`;
+      ctx.beginPath(); ctx.roundRect(s.x*CELL+2, s.y*CELL+2, CELL-4, CELL-4, 6); ctx.fill();
+    });
+    ctx.shadowBlur = 0;
+    if (paused){ ctx.fillStyle='rgba(4,7,15,0.7)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle='#22d3ee'; ctx.font='900 40px Orbitron'; ctx.textAlign='center'; ctx.fillText('PAUSED', canvas.width/2, canvas.height/2); }
+  }
+  function step(){
+    dir = nextDir;
+    const head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
+    if (head.x<0 || head.y<0 || head.x>=COLS || head.y>=ROWS || snake.some(s=>s.x===head.x&&s.y===head.y)) return gameOver();
+    snake.unshift(head);
+    if (head.x===food.x && head.y===food.y){
+      score += 10; setShell(score, high);
+      if (score % 50 === 0) speed = Math.min(18, speed + 1);
+      placeFood();
+    } else snake.pop();
+    draw();
+  }
+  function gameOver(){
+    alive = false; running = false;
+    grant('speed');
+    if (score > 99) grant('highscore');
+    if (score >= 100) grant('five');
+    if (score > high){ high = score; const sc = store.get('scores',{}); sc['neon-serpent'] = score; store.set('scores', sc); setShell(score, high); }
+    showOverlay('GAME OVER', `Final score: ${score} · High score: ${high}. One more run?`, 'PLAY AGAIN');
+  }
+  function loop(ts){
+    if (!running) return;
+    if (ts - tick > 1000/speed){ tick = ts; step(); }
+    rafId = requestAnimationFrame(loop);
+  }
+  return {
+    start(){ if (!alive) reset(); hideOverlay(); paused = false; running = true; rafId = requestAnimationFrame(loop); },
+    restart(){ reset(); this.start(); },
+    togglePause(){ if (!running && !paused) return; paused = !paused; if (paused){ draw(); } else { running = true; rafId = requestAnimationFrame(loop); } },
+    setDir(d){ const m = {up:{x:0,y:-1},down:{x:0,y:1},left:{x:-1,y:0},right:{x:1,y:0}}[d]; if (m && !(m.x===-dir.x && m.y===-dir.y)) nextDir = m; },
+    stop(){ running = false; },
+    get running(){ return running; }
+  };
+}
+
+/* ============ VOXEL SANDBOX engine (original raycast voxel renderer) ============ */
+const BLOCKS = [null,
+  {name:'GRASS',  col:[74,195,120]},
+  {name:'DIRT',   col:[140,95,60]},
+  {name:'STONE',  col:[122,132,148]},
+  {name:'SAND',   col:[222,202,134]},
+  {name:'WOOD',   col:[130,92,52]},
+  {name:'LEAVES', col:[58,168,92]},
+  {name:'CRYSTAL',col:[64,220,255]},
+  {name:'BRICK',  col:[188,84,72]}
+];
+function hash2(x,z,s){ let h=(x*374761393 + z*668265263 + s*1442695041)|0; h=Math.imul(h^h>>>13,1274126177); return ((h^h>>>16)>>>0)/4294967296; }
+
+function VoxelSandbox(){
+  const S=32, MH=16, VW=360, VH=225;
+  const oc=document.createElement('canvas'); oc.width=VW; oc.height=VH;
+  const o=oc.getContext('2d');
+  const world=new Uint8Array(S*S*MH);
+  const idx=(x,y,z)=>(y*S+z)*S+x;
+  function colH(x,z){ for(let y=MH-1;y>=0;y--) if(world[(y*S+z)*S+x]) return y+1; return 0; }
+  let seed=(Math.random()*1e9)|0, sel=1, yaw=0, pitchS=0.12;
+  let px=16.5, pz=16.5, py=8, vy=0, grounded=false;
+  const keys={f:0,b:0,l:0,r:0};
+  let running=false, pPaused=false, raf=null, lastT=0;
+
+  /* hotbar */
+  const hb=document.getElementById('voxelHotbar');
+  hb.innerHTML = BLOCKS.slice(1).map((b,i)=>
+    `<button data-b="${i+1}" title="${b.name} (key ${i+1})" aria-label="Select ${b.name}" class="vhot w-9 h-9 rounded-lg border-2 border-slate-600 text-[10px] font-bold text-void/70 transition" style="background:rgb(${b.col.join(',')})">${i+1}</button>`).join('');
+  function setSel(n){ sel=n; hb.querySelectorAll('.vhot').forEach(b=>b.classList.toggle('border-cyan-400',+b.dataset.b===n)); }
+  hb.onclick = e => { const b=e.target.closest('[data-b]'); if(b) setSel(+b.dataset.b); };
+  setSel(1);
+
+  /* world generation */
+  function gen(s){
+    world.fill(0); seed=s;
+    const coarse=[]; for(let i=0;i<81;i++) coarse.push(hash2(i%9,(i/9)|0,s));
+    const vn=(x,z)=>{ const gx=x/4,gz=z/4,x0=Math.min(7,gx|0),z0=Math.min(7,gz|0),fx=gx-x0,fz=gz-z0;
+      const a=coarse[z0*9+x0],b=coarse[z0*9+x0+1],c=coarse[(z0+1)*9+x0],d=coarse[(z0+1)*9+x0+1];
+      return (a*(1-fx)+b*fx)*(1-fz)+(c*(1-fx)+d*fx)*fz; };
+    for(let x=0;x<S;x++)for(let z=0;z<S;z++){
+      const h=3+Math.round(vn(x,z)*6);
+      for(let y=0;y<h;y++){
+        let t=3;
+        if(y===h-1) t=h<=4?4:1; else if(y>=h-3) t=2;
+        world[idx(x,y,z)]=t;
+      }
+      const r=hash2(x,z,s+77);
+      if(r>0.982 && h>4 && x>0 && x<S-1 && z>0 && z<S-1){
+        for(let y=h;y<h+3;y++) world[idx(x,y,z)]=5;
+        for(let dx=-1;dx<=1;dx++)for(let dz=-1;dz<=1;dz++)for(let y=h+2;y<=h+3;y++){
+          const nx=x+dx,nz=z+dz;
+          if(nx>=0&&nz>=0&&nx<S&&nz<S&&world[idx(nx,y,nz)]===0) world[idx(nx,y,nz)]=6;
+        }
+      } else if(r<0.012 && h>3){ world[idx(x,h,z)]=7; }
+    }
+    spawn();
+  }
+  function spawn(){ px=16.5; pz=16.5; py=Math.max(1,colH(16,16)); vy=0; yaw=hash2(1,1,seed)*6.28; pitchS=0.12; updVec(); }
+
+  /* persistence */
+  function save(){ try{ store.set('voxel',{seed,data:Array.from(world).join('')}); }catch(e){} }
+  function load(){
+    const v=store.get('voxel',null);
+    if(v && typeof v.data==='string' && v.data.length===S*S*MH){
+      for(let i=0;i<world.length;i++) world[i]=+v.data[i]||0;
+      seed=v.seed; spawn(); return true;
+    }
+    return false;
+  }
+
+  /* camera */
+  const TANF=0.65, FOCAL=(VW/2)/TANF;
+  let dirX=1,dirZ=0,plX=0,plZ=TANF;
+  function updVec(){ dirX=Math.cos(yaw); dirZ=Math.sin(yaw); plX=-dirZ*TANF; plZ=dirX*TANF; }
+  updVec();
+
+  const skyC=[], gndC=[];
+  for(let y=0;y<VH;y++){ const t=y/VH; skyC[y]=`rgb(${10+t*16|0},${15+t*24|0},${30+t*48|0})`; }
+
+  function render(){
+    const horizon=VH/2+pitchS*VH*0.9, eye=py+1.6;
+    for(let y=0;y<VH;y++){ o.fillStyle=skyC[y]; o.fillRect(0,y,VW,1); }
+    for(let y=0;y<VH;y++){
+      const d=Math.max(0.5,y-horizon), dist=eye*FOCAL/d, f=Math.max(0,1-dist/34);
+      gndC[y]=`rgb(${16+f*22|0},${24+f*26|0},${18+f*18|0})`;
+    }
+    for(let sx=0;sx<VW;sx++){
+      const cx=2*sx/VW-1, rdx=dirX+plX*cx, rdz=dirZ+plZ*cx;
+      let mx=px|0, mz=pz|0;
+      const ddx=Math.abs(1/(rdx||1e-9)), ddz=Math.abs(1/(rdz||1e-9));
+      let stX,stZ,sdx,sdz;
+      if(rdx<0){stX=-1;sdx=(px-mx)*ddx;}else{stX=1;sdx=(mx+1-px)*ddx;}
+      if(rdz<0){stZ=-1;sdz=(pz-mz)*ddz;}else{stZ=1;sdz=(mz+1-pz)*ddz;}
+      let yb=VH, guard=0, done=false;
+      while(!done && guard++<80){
+        let side;
+        if(sdx<sdz){ mx+=stX; sdx+=ddx; side=0; } else { mz+=stZ; sdz+=ddz; side=1; }
+        if(mx<0||mz<0||mx>=S||mz>=S) break;
+        const dist=side? sdz-ddz : sdx-ddx;
+        const H=colH(mx,mz);
+        if(H>0){
+          if(eye+dist*pitchS < H){
+            const yTop=Math.round(horizon-(H-eye)*FOCAL/Math.max(0.1,dist));
+            if(yTop<yb){
+              const t=world[((H-1)*S+mz)*S+mx]||3, c=BLOCKS[t].col;
+              const sh=((1-Math.min(1,dist/34))*0.8+0.2)*(side?0.75:1);
+              o.fillStyle=`rgb(${c[0]*sh|0},${c[1]*sh|0},${c[2]*sh|0})`;
+              const y0=Math.max(0,yTop);
+              o.fillRect(sx,y0,1,Math.min(VH,yb)-y0);
+              yb=yTop;
+            }
+            done=true;
+          }
+        }
+      }
+      if(yb<VH){ const yr=Math.max(0,Math.min(VH-1,yb)); o.fillStyle=gndC[yr]; o.fillRect(sx,yb,1,VH-yb); }
+    }
+    o.strokeStyle='rgba(103,232,249,0.9)'; o.lineWidth=1; o.beginPath();
+    o.moveTo(VW/2-7,VH/2); o.lineTo(VW/2-2,VH/2); o.moveTo(VW/2+2,VH/2); o.lineTo(VW/2+7,VH/2);
+    o.moveTo(VW/2,VH/2-7); o.lineTo(VW/2,VH/2-2); o.moveTo(VW/2,VH/2+2); o.lineTo(VW/2,VH/2+7); o.stroke();
+  }
+
+  /* targeting */
+  function pick(){
+    updVec();
+    let mx=px|0, mz=pz|0;
+    const rdx=dirX, rdz=dirZ;
+    const ddx=Math.abs(1/(rdx||1e-9)), ddz=Math.abs(1/(rdz||1e-9));
+    let stX,stZ,sdx,sdz;
+    if(rdx<0){stX=-1;sdx=(px-mx)*ddx;}else{stX=1;sdx=(mx+1-px)*ddx;}
+    if(rdz<0){stZ=-1;sdz=(pz-mz)*ddz;}else{stZ=1;sdz=(mz+1-pz)*ddz;}
+    let pmx=mx,pmz=mz,guard=0;
+    while(guard++<40){
+      let side;
+      if(sdx<sdz){ pmx=mx;pmz=mz; mx+=stX; sdx+=ddx; side=0; } else { pmx=mx;pmz=mz; mz+=stZ; sdz+=ddz; side=1; }
+      if(mx<0||mz<0||mx>=S||mz>=S) return null;
+      const dist=side? sdz-ddz : sdx-ddx;
+      if(dist>6) return null;
+      const H=colH(mx,mz);
+      if(H>0 && py+1.6+dist*pitchS < H) return {x:mx,z:mz,h:H,px:pmx,pz:pmz,ph:colH(pmx,pmz)};
+    }
+    return null;
+  }
+  function mine(){ const t=pick(); if(!t) return; world[idx(t.x,t.h-1,t.z)]=0; save(); }
+  function place(){ const t=pick(); if(!t||t.ph>=MH) return;
+    if(t.px===(px|0)&&t.pz===(pz|0)) return;
+    world[idx(t.px,t.ph,t.pz)]=sel; save();
+  }
+
+  /* physics */
+  function update(dt){
+    updVec();
+    const sp=4.5*dt; let mvx=0,mvz=0;
+    if(keys.f){mvx+=dirX*sp;mvz+=dirZ*sp;}
+    if(keys.b){mvx-=dirX*sp;mvz-=dirZ*sp;}
+    if(keys.l){mvx+=dirZ*sp;mvz-=dirX*sp;}
+    if(keys.r){mvx-=dirZ*sp;mvz+=dirX*sp;}
+    const nx=px+mvx, nz=pz+mvz;
+    if(nx>0.3&&nx<S-0.3&&colH(nx|0,pz|0)<=py+1.05) px=nx;
+    if(nz>0.3&&nz<S-0.3&&colH(px|0,nz|0)<=py+1.05) pz=nz;
+    const g=colH(px|0,pz|0);
+    vy-=18*dt; py+=vy*dt;
+    if(py<=g){ py=g; vy=0; grounded=true; } else grounded=false;
+  }
+
+  function loop(ts){
+    raf=requestAnimationFrame(loop);
+    const dt=Math.min(0.05,(ts-lastT)/1000||0.016); lastT=ts;
+    if(running&&!pPaused) update(dt);
+    render();
+    ctx.imageSmoothingEnabled=false;
+    ctx.drawImage(oc,0,0,canvas.width,canvas.height);
+    if(pPaused){ ctx.fillStyle='rgba(4,7,15,0.65)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle='#22d3ee'; ctx.font='900 40px Orbitron'; ctx.textAlign='center'; ctx.fillText('PAUSED',canvas.width/2,canvas.height/2); }
+  }
+
+  /* input (assigned handlers — safe to relaunch without duplicate listeners) */
+  function look(dx,dy){ yaw+=dx*0.0032; pitchS=Math.max(-0.85,Math.min(0.85,pitchS-dy*0.0022)); }
+  canvas.onclick = () => {
+    if (!running || pPaused) return;
+    /* Pointer lock may be blocked inside sandboxed previews — never throw, fall back to drag-look. */
+    try {
+      const p = canvas.requestPointerLock && canvas.requestPointerLock();
+      if (p && p.catch) p.catch(()=>{});
+    } catch(err){ /* drag-look fallback stays active */ }
+  };
+  canvas.oncontextmenu = e => e.preventDefault();
+  canvas.onmousedown = e => { if(!running||pPaused) return; if(e.button===0) mine(); else if(e.button===2) place(); };
+  let dragging=false, lx=0, ly=0;
+  /* Drag-look works for mouse AND touch whenever pointer lock is not active,
+     so camera control always works even if the preview blocks pointer lock. */
+  canvas.onpointerdown = e => { dragging=true; lx=e.clientX; ly=e.clientY; };
+  canvas.onpointermove = e => {
+    if (document.pointerLockElement === canvas){
+      look(e.movementX, e.movementY);
+    } else if (dragging){
+      look((e.clientX-lx)*2, (e.clientY-ly)*2);
+      lx=e.clientX; ly=e.clientY;
+    }
+  };
+  canvas.onpointerup = canvas.onpointercancel = () => dragging=false;
+  canvas.onpointerleave = () => dragging=false;
+  /* Release pointer lock when pausing so the cursor is usable again. */
+  function releaseLock(){ try { if (document.pointerLockElement === canvas && document.exitPointerLock) document.exitPointerLock(); } catch(e){} }
+
+  function setKey(e,v){
+    const k=e.key.toLowerCase();
+    if(k==='w'||e.key==='ArrowUp') keys.f=v;
+    else if(k==='s'||e.key==='ArrowDown') keys.b=v;
+    else if(k==='a'||e.key==='ArrowLeft') keys.l=v;
+    else if(k==='d'||e.key==='ArrowRight') keys.r=v;
+    else if(k===' '){ if(v&&grounded) vy=6.5; }
+    else if(v&&/^[1-8]$/.test(k)) setSel(+k);
+    else return;
+    e.preventDefault();
+  }
+  const bindHold=(id,fn)=>{ const el=document.getElementById(id); if(!el) return;
+    el.onpointerdown=e=>{e.preventDefault();fn(1);};
+    el.onpointerup=el.onpointerleave=el.onpointercancel=()=>fn(0); };
+  bindHold('vm-f',v=>keys.f=v); bindHold('vm-b',v=>keys.b=v);
+  bindHold('vm-l',v=>keys.l=v); bindHold('vm-r',v=>keys.r=v);
+  bindHold('vm-jump',v=>{ if(v&&grounded) vy=6.5; });
+  const tap=(id,fn)=>{ const el=document.getElementById(id); if(el) el.onclick=fn; };
+  tap('vm-mine',mine); tap('vm-place',place);
+
+  /* boot world */
+  if(!load()) gen(seed);
+  render();
+  showOverlay('VOXEL SANDBOX','Explore a generated voxel island. WASD to move, mouse to look, left click mines, right click places, 1–8 picks a block, Space jumps. Your world saves automatically.','ENTER WORLD');
+  raf=requestAnimationFrame(loop);
+
+  return {
+    start(){ hideOverlay(); pPaused=false; running=true; lastT=performance.now(); },
+    restart(){ releaseLock(); gen((Math.random()*1e9)|0); save(); showOverlay('VOXEL SANDBOX','New world generated. Enter to explore and build.','ENTER WORLD'); running=false; pPaused=false; },
+    togglePause(){ if(!running&&!pPaused) return; pPaused=!pPaused; if(pPaused){ releaseLock(); } else { running=true; lastT=performance.now(); } },
+    setDir(){},
+    key(e){ setKey(e,true); },
+    keyup(e){ setKey(e,false); },
+    stop(){ running=false; dragging=false; releaseLock(); if(raf) cancelAnimationFrame(raf); raf=null; save(); },
+    get running(){ return running; }
+  };
+}
+
+/* ============ POLY RUSH engine (original top-down arcade racer) ============ */
+function PolyRush(){
+  const W = canvas.width, H = canvas.height;
+  /* closed circuit centerline (waypoints) */
+  const WP = [
+    [120,80],[260,60],[400,70],[520,60],[640,110],[660,220],[580,300],[440,280],[340,360],[200,400],[90,340],[70,210]
+  ];
+  const TRACK_W = 46, LAPS = 3;
+  const CP_IDX = [0,3,6,9];              // checkpoint waypoints (0 is start/finish)
+  /* ramps (boost) and barriers along the track */
+  const ramps = [[640,110,40],[200,400,40],[70,210,40],[400,70,40]];
+  const barriers = [
+    {x:430,y:150,w:16,h:46},{x:250,y:330,w:46,h:16},{x:120,y:250,w:16,h:46},{x:560,y:170,w:16,h:46}
+  ];
+  const car = {x:120,y:80,a:0,v:0};
+  const keys = {gas:0,brake:0,left:0,right:0,hand:0};
+  let lap=1, nextCP=1, lapStart=0, raceT=0, best=store.get('bestlap',null);
+  let running=false, pPaused=false, finished=false, raf=null, lastT=0, camShake=0;
+  const bestEl=document.getElementById('prBest'), lapEl=document.getElementById('prLap'), timeEl=document.getElementById('prTime');
+
+  function fmt(t){ return (t/1000).toFixed(1)+'s'; }
+  function updHUD(){ lapEl.textContent = Math.min(lap,LAPS)+' / '+LAPS; timeEl.textContent = fmt(raceT); bestEl.textContent = best?fmt(best):'—'; }
+  setShell(0, best?Math.round(best/10):0); updHUD();
+
+  /* geometry helpers */
+  function onTrack(x,y){
+    for(let i=0;i<WP.length;i++){
+      const a=WP[i], b=WP[(i+1)%WP.length];
+      const dx=b[0]-a[0], dy=b[1]-a[1], L2=dx*dx+dy*dy;
+      let t=((x-a[0])*dx+(y-a[1])*dy)/L2; t=Math.max(0,Math.min(1,t));
+      const px=a[0]+dx*t-x, py=a[1]+dy*t-y;
+      if(px*px+py*py < TRACK_W*TRACK_W) return true;
+    }
+    return false;
+  }
+  function cpHit(i,x,y){ const c=WP[CP_IDX[i]]; const dx=c[0]-x, dy=c[1]-y; return dx*dx+dy*dy < 90*90; }
+  function respawn(){
+    const c = WP[CP_IDX[(nextCP+CP_IDX.length-1)%CP_IDX.length]];
+    const n = WP[(CP_IDX[(nextCP+CP_IDX.length-1)%CP_IDX.length]+1)%WP.length];
+    car.x=c[0]; car.y=c[1]; car.v=0;
+    car.a=Math.atan2(n[1]-c[1], n[0]-c[0]);
+  }
+
+  function draw(){
+    ctx.save();
+    if(camShake>0){ ctx.translate((Math.random()-0.5)*camShake,(Math.random()-0.5)*camShake); camShake*=0.85; }
+    ctx.fillStyle='#05070d'; ctx.fillRect(-10,-10,W+20,H+20);
+    /* circuit glow underlay */
+    ctx.lineCap='round'; ctx.lineJoin='round';
+    ctx.beginPath(); ctx.moveTo(WP[0][0],WP[0][1]);
+    for(let i=1;i<=WP.length;i++) ctx.lineTo(WP[i%WP.length][0],WP[i%WP.length][1]);
+    ctx.strokeStyle='rgba(34,211,238,0.25)'; ctx.lineWidth=TRACK_W*2+10; ctx.stroke();
+    ctx.strokeStyle='#131a30'; ctx.lineWidth=TRACK_W*2; ctx.stroke();
+    ctx.strokeStyle='rgba(103,232,249,0.55)'; ctx.lineWidth=2; ctx.setLineDash([14,12]); ctx.stroke(); ctx.setLineDash([]);
+    /* start/finish line */
+    const f0=WP[0], f1=WP[1];
+    const fa=Math.atan2(f1[1]-f0[1],f1[0]-f0[0])+Math.PI/2;
+    for(let k=-3;k<=3;k++){
+      const ox=Math.cos(fa)*k*8, oy=Math.sin(fa)*k*8;
+      ctx.fillStyle = (k%2===0)?'#e2e8f0':'#0b1120';
+      ctx.save(); ctx.translate(f0[0]+ox,f0[1]+oy); ctx.rotate(fa); ctx.fillRect(-4,-8,8,16); ctx.restore();
+    }
+    /* checkpoints */
+    for(let ci=1;ci<CP_IDX.length;ci++){
+      const c=WP[CP_IDX[ci]], active=ci===nextCP;
+      ctx.strokeStyle = active?'rgba(250,204,21,0.9)':'rgba(34,211,238,0.3)';
+      ctx.lineWidth = active?4:2;
+      ctx.beginPath(); ctx.arc(c[0],c[1],90,0,7); ctx.stroke();
+      if(active){ ctx.fillStyle='rgba(250,204,21,0.9)'; ctx.font='900 16px Orbitron'; ctx.textAlign='center'; ctx.fillText('CP', c[0], c[1]+6); }
+    }
+    /* ramps */
+    ramps.forEach(r=>{ ctx.fillStyle='rgba(244,114,182,0.85)'; ctx.beginPath();
+      ctx.moveTo(r[0]-18,r[1]+12); ctx.lineTo(r[0]+18,r[1]+12); ctx.lineTo(r[0],r[1]-16); ctx.closePath(); ctx.fill(); });
+    /* barriers */
+    ctx.fillStyle='#f43f5e'; barriers.forEach(b=>{ ctx.fillRect(b.x,b.y,b.w,b.h);
+      ctx.strokeStyle='rgba(244,63,94,0.5)'; ctx.strokeRect(b.x-3,b.y-3,b.w+6,b.h+6); });
+    /* car */
+    ctx.save(); ctx.translate(car.x,car.y); ctx.rotate(car.a);
+    ctx.shadowColor='#22d3ee'; ctx.shadowBlur=12;
+    ctx.fillStyle = car.v<0 ? '#94a3b8' : '#67e8f9';
+    ctx.beginPath(); ctx.moveTo(14,0); ctx.lineTo(-10,-8); ctx.lineTo(-6,0); ctx.lineTo(-10,8); ctx.closePath(); ctx.fill();
+    ctx.shadowBlur=0; ctx.restore();
+    if(pPaused){ ctx.fillStyle='rgba(4,7,15,0.7)'; ctx.fillRect(0,0,W,H);
+      ctx.fillStyle='#22d3ee'; ctx.font='900 40px Orbitron'; ctx.textAlign='center'; ctx.fillText('PAUSED',W/2,H/2); }
+    ctx.restore();
+  }
+
+  function update(dt){
+    if(finished) return;
+    raceT += dt*1000;
+    const MAXV=230, ACC=170;
+    let steer = (keys.right-keys.left);
+    if(keys.hand) steer *= 1.6;
+    car.a += steer * 2.6 * dt * Math.min(1, Math.abs(car.v)/60);
+    if(keys.gas) car.v += ACC*dt;
+    else car.v -= 60*dt;
+    if(keys.brake) car.v -= 260*dt;
+    if(keys.hand) car.v -= 120*dt;
+    car.v = Math.max(-70, Math.min(MAXV, car.v));
+    if(!onTrack(car.x,car.y)) car.v *= (1-1.6*dt);
+    const nx=car.x+Math.cos(car.a)*car.v*dt, ny=car.y+Math.sin(car.a)*car.v*dt;
+    let crash=false;
+    for(const b of barriers){
+      if(nx>b.x-12&&nx<b.x+b.w+12&&ny>b.y-12&&ny<b.y+b.h+12){ crash=true; break; }
+    }
+    if(crash){ camShake=10; respawn(); }
+    else { car.x=Math.max(10,Math.min(W-10,nx)); car.y=Math.max(10,Math.min(H-10,ny)); }
+    /* ramps = boost */
+    for(const r of ramps){ const dx=car.x-r[0], dy=car.y-r[1]; if(dx*dx+dy*dy<40*40 && car.v>0){ car.v=Math.min(MAXV+80,car.v+160*dt); } }
+    /* checkpoints & laps */
+    if(cpHit(nextCP,car.x,car.y)){
+      nextCP=(nextCP+1)%CP_IDX.length;
+      if(nextCP===1){
+        const lapT=raceT-lapStart; lapStart=raceT;
+        if(!best||lapT<best){ best=Math.round(lapT); store.set('bestlap',best); }
+        lap++;
+        if(lap>LAPS){
+          finished=true; running=false;
+          grant('racing'); grant('speed');
+          const pts=Math.max(10, 2000-Math.round(raceT/10));
+          const sc=store.get('scores',{}); sc['poly-rush']=Math.max(sc['poly-rush']||0,pts); store.set('scores',sc); setShell(pts,best?Math.round(best/10):0);
+          showOverlay('FINISH!',`You completed ${LAPS} laps in ${fmt(raceT)} · Best lap: ${fmt(best)} · Score: ${pts}. Race again?`,'RACE AGAIN');
+        }
+      }
+    }
+    updHUD();
+  }
+
+  function loop(ts){
+    raf=requestAnimationFrame(loop);
+    const dt=Math.min(0.05,(ts-lastT)/1000||0.016); lastT=ts;
+    if(running&&!pPaused) update(dt);
+    draw();
+  }
+
+  function setKey(e,v){
+    const k=e.key.toLowerCase();
+    if(k==='w'||e.key==='ArrowUp') keys.gas=v;
+    else if(k==='s'||e.key==='ArrowDown') keys.brake=v;
+    else if(k==='a'||e.key==='ArrowLeft') keys.left=v;
+    else if(k==='d'||e.key==='ArrowRight') keys.right=v;
+    else if(k===' ') keys.hand=v;
+    else if(v&&k==='r'){ this.restart&&this.restart(); }
+    else return;
+    e.preventDefault();
+  }
+  const hold=(id,fn)=>{ const el=document.getElementById(id); if(!el) return;
+    el.onpointerdown=e=>{e.preventDefault();fn(1);};
+    el.onpointerup=el.onpointerleave=el.onpointercancel=()=>fn(0); };
+  hold('pr-gas',v=>keys.gas=v); hold('pr-brake',v=>keys.brake=v);
+  hold('pr-left',v=>keys.left=v); hold('pr-right',v=>keys.right=v);
+  hold('pr-hand',v=>keys.hand=v);
+
+  function resetRace(){
+    lap=1; nextCP=1; raceT=0; lapStart=0; finished=false; pPaused=false;
+    car.x=WP[0][0]; car.y=WP[0][1]; car.v=0;
+    car.a=Math.atan2(WP[1][1]-WP[0][1],WP[1][0]-WP[0][0]);
+    updHUD(); draw();
+  }
+  resetRace();
+  showOverlay('POLY RUSH','Complete 3 laps of the neon circuit. Pass checkpoints in order, hit pink ramps for boosts and avoid red barriers. Off the asphalt you lose speed!','START RACE');
+  raf=requestAnimationFrame(loop);
+
+  const api = {
+    start(){ if(finished) resetRace(); hideOverlay(); pPaused=false; running=true; lastT=performance.now(); },
+    restart(){ resetRace(); this.start(); },
+    togglePause(){ if(!running&&!pPaused) return; pPaused=!pPaused; if(!pPaused){ running=true; lastT=performance.now(); } },
+    setDir(){},
+    key(e){ setKey.call(api,e,true); },
+    keyup(e){ setKey.call(api,e,false); },
+    stop(){ running=false; if(raf) cancelAnimationFrame(raf); raf=null; },
+    get running(){ return running; }
+  };
+  return api;
+}
+
+/* ============ SKY RUSH engine (original 2.5D pseudo-3D tunnel flight) ============ */
+function SkyRush(){
+  const W = canvas.width, H = canvas.height;
+  const CX = W/2, CY = H/2 - 20, HORIZON = 90;
+  const F = 260;                       // focal length
+  let shipY = 0, shipX = 0;            // ship offset in world units
+  const keys = {up:0,down:0,left:0,right:0};
+  let rings = [], obstacles = [];
+  let score = 0, level = 1, ringCount = 0, ringTarget = 5, time = 30;
+  let running = false, pPaused = false, over = false, raf = null, lastT = 0;
+  const LVL_TIME = 30;
+  const scoreEl = document.getElementById('srScore'), timeEl = document.getElementById('srTime'),
+        lvlEl = document.getElementById('srLevel'), ringsEl = document.getElementById('srRings');
+  function updHUD(){ scoreEl.textContent = score; timeEl.textContent = Math.max(0,time).toFixed(1)+'s';
+    lvlEl.textContent = level; ringsEl.textContent = ringCount+' / '+ringTarget; }
+  function spawnRing(z){ rings.push({z: z, y: (Math.random()*2-1)*1.6, x: (Math.random()*2-1)*1.6, hit:false}); }
+  function spawnObs(z){ const edge = Math.random()<0.5?-1:1;
+    obstacles.push({z: z, y: (Math.random()*2-1)*1.8, x: edge*(1.2+Math.random()*1.4), w: 0.7+Math.random()*0.7, hit:false}); }
+  function buildLevel(){
+    rings = []; obstacles = [];
+    for(let i=0;i<6;i++) spawnRing(14 + i*10 + Math.random()*4);
+    const n = 2 + level*2;
+    for(let i=0;i<n;i++) spawnObs(10 + i*(150/(2+level)) + Math.random()*10);
+  }
+  function proj(z, off, plane){ return { s: F/Math.max(0.5,z), x: CX + (off - shipX*0.4)*F/Math.max(0.5,z), y: plane === 'y' ? CY - (off - shipY*0.4)*F/Math.max(0.5,z)*0.9 : 0 }; }
+
+  function draw(){
+    ctx.fillStyle = '#03101f'; ctx.fillRect(0,0,W,H);
+    /* stars */
+    ctx.fillStyle = 'rgba(226,232,240,0.7)';
+    for(let i=0;i<40;i++){ const sx=(i*97)%W, sy=(i*53)%HORIZON; ctx.fillRect(sx,sy,1.5,1.5); }
+    /* neon corridor */
+    ctx.strokeStyle = 'rgba(34,211,238,0.25)'; ctx.lineWidth = 2;
+    for(let i=0;i<10;i++){
+      const z = 2 + ((i*20 + (performance.now()/40)%20) % 200);
+      const p = proj(z, -3.2, 'x');
+      const p2 = proj(z, 3.2, 'x');
+      const yb = CY + (3.2 + shipY*0.4)*F/Math.max(0.5,z)*0.9;
+      ctx.globalAlpha = Math.min(1, 2.5/z);
+      ctx.beginPath(); ctx.moveTo(p.x, HORIZON + (yb-HORIZON)*0); ctx.moveTo(p.x, yb); ctx.lineTo(p2.x, yb); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    /* rings */
+    rings.sort((a,b)=>b.z-a.z).forEach(r => {
+      if(r.z < 0.5 || r.z > 60) return;
+      const s = F/r.z, rx = 26*s, ry = 34*s;
+      const cx = CX + (r.x - shipX*0.4)*s, cy = CY - (r.y - shipY*0.4)*s*0.9;
+      ctx.strokeStyle = r.hit ? 'rgba(52,211,153,0.5)' : '#f59e0b';
+      ctx.lineWidth = r.hit ? 3 : 5;
+      ctx.shadowColor = '#f59e0b'; ctx.shadowBlur = r.hit ? 0 : 12;
+      ctx.beginPath(); ctx.ellipse(cx, cy, Math.max(1,rx), Math.max(1,ry), 0, 0, 7); ctx.stroke();
+      ctx.shadowBlur = 0;
+    });
+    /* obstacles (pylons) */
+    obstacles.forEach(o => {
+      if(o.z < 0.5 || o.z > 60) return;
+      const s = F/o.z, w = o.w*s;
+      const cx = CX + (o.x - shipX*0.4)*s, cy = CY - (o.y - shipY*0.4)*s*0.9;
+      ctx.fillStyle = '#475569'; ctx.strokeStyle = 'rgba(148,163,184,0.5)';
+      ctx.fillRect(cx-w/2, cy-w, w, w*3); ctx.strokeRect(cx-w/2, cy-w, w, w*3);
+    });
+    /* ship */
+    const shx = CX + shipX*10, shy = CY - shipY*10*0.9;
+    ctx.shadowColor = '#22d3ee'; ctx.shadowBlur = 14;
+    ctx.fillStyle = '#67e8f9';
+    ctx.beginPath(); ctx.moveTo(shx, shy-14); ctx.lineTo(shx+13, shy+10); ctx.lineTo(shx, shy+4); ctx.lineTo(shx-13, shy+10); ctx.closePath(); ctx.fill();
+    ctx.shadowBlur = 0;
+    /* engine flame */
+    ctx.fillStyle = 'rgba(59,130,246,0.8)';
+    const fl = 8 + Math.sin(performance.now()/40)*3;
+    ctx.beginPath(); ctx.moveTo(shx-5, shy+5); ctx.lineTo(shx, shy+5+fl); ctx.lineTo(shx+5, shy+5); ctx.closePath(); ctx.fill();
+    if(pPaused){ ctx.fillStyle='rgba(4,7,15,0.7)'; ctx.fillRect(0,0,W,H);
+      ctx.fillStyle='#22d3ee'; ctx.font='900 40px Orbitron'; ctx.textAlign='center'; ctx.fillText('PAUSED',W/2,H/2); }
+  }
+
+  function update(dt){
+    if(over) return;
+    const spd = (16 + level*2) * dt;
+    /* scroll world toward ship */
+    rings.forEach(r => r.z -= spd);
+    obstacles.forEach(o => o.z -= spd);
+    /* steering */
+    const st = 3.4*dt;
+    if(keys.up) shipY = Math.min(2.4, shipY + st);
+    if(keys.down) shipY = Math.max(-2.4, shipY - st);
+    if(keys.left) shipX = Math.max(-2.8, shipX - st);
+    if(keys.right) shipX = Math.min(2.8, shipX + st);
+    /* timer */
+    time -= dt;
+    if(time <= 0) return gameOver(false);
+    /* ring collisions */
+    rings.forEach(r => {
+      if(!r.hit && r.z < 1.2 && r.z > -0.5){
+        if(Math.abs(r.x - shipX) < 1.1 && Math.abs(r.y - shipY) < 1.1){
+          r.hit = true; score += 100; ringCount++;
+          if(ringCount >= ringTarget) return levelUp();
+        }
+      }
+    });
+    /* obstacle collisions */
+    for(const o of obstacles){
+      if(o.z < 1.2 && o.z > -0.5){
+        if(Math.abs(o.x - shipX) < o.w*0.7 + 0.35 && Math.abs(o.y - shipY) < 0.6){
+          return gameOver(true);
+        }
+      }
+    }
+    /* recycle offscreen */
+    rings = rings.filter(r => r.z > -1);
+    obstacles = obstacles.filter(o => o.z > -1);
+    if(rings.filter(r=>!r.hit).length < 4){ let maxZ = Math.max(10, ...rings.map(r=>r.z)); spawnRing(maxZ + 8 + Math.random()*6); }
+    if(obstacles.length < 2 + level){ let maxZ = Math.max(10, ...obstacles.map(o=>o.z)); spawnObs(maxZ + 6 + Math.random()*8); }
+    updHUD();
+  }
+  function levelUp(){
+    grant('speed');
+    level++; ringCount = 0; ringTarget = 4 + level; time = LVL_TIME;
+    const sc = store.get('scores',{}); sc['sky-rush'] = Math.max(sc['sky-rush']||0, score); store.set('scores', sc);
+    setShell(score, sc['sky-rush']);
+    buildLevel();
+    toastish('LEVEL ' + level + ' — target: ' + ringTarget + ' rings!');
+  }
+  let toastT;
+  function toastish(msg){ ctx.fillStyle='rgba(4,7,15,0.75)'; ctx.fillRect(0,H/2-34,W,54);
+    ctx.fillStyle='#f59e0b'; ctx.font='900 24px Orbitron'; ctx.textAlign='center'; ctx.fillText(msg, W/2, H/2); }
+  function gameOver(crashed){
+    over = true; running = false;
+    const sc = store.get('scores',{}); sc['sky-rush'] = Math.max(sc['sky-rush']||0, score); store.set('scores', sc);
+    setShell(score, sc['sky-rush']);
+    showOverlay(crashed ? 'CRASHED!' : 'OUT OF TIME', `Flight over at level ${level} with ${score} points. Fly again?`, 'FLY AGAIN');
+  }
+  function loop(ts){
+    raf = requestAnimationFrame(loop);
+    const dt = Math.min(0.05,(ts-lastT)/1000||0.016); lastT = ts;
+    if(running && !pPaused) update(dt);
+    draw();
+  }
+  function setKey(e,v){
+    const k = e.key.toLowerCase();
+    if(k==='w'||e.key==='ArrowUp') keys.up = v;
+    else if(k==='s'||e.key==='ArrowDown') keys.down = v;
+    else if(k==='a'||e.key==='ArrowLeft') keys.left = v;
+    else if(k==='d'||e.key==='ArrowRight') keys.right = v;
+    else return;
+    e.preventDefault();
+  }
+  const hold = (id,fn) => { const el = document.getElementById(id); if(!el) return;
+    el.onpointerdown = e => { e.preventDefault(); fn(1); };
+    el.onpointerup = el.onpointerleave = el.onpointercancel = () => fn(0); };
+  hold('sr-up',v=>keys.up=v); hold('sr-down',v=>keys.down=v);
+  hold('sr-left',v=>keys.left=v); hold('sr-right',v=>keys.right=v);
+
+  function resetFlight(){
+    score = 0; level = 1; ringCount = 0; ringTarget = 5; time = LVL_TIME;
+    shipX = 0; shipY = 0; over = false; pPaused = false;
+    buildLevel(); updHUD(); draw();
+  }
+  resetFlight();
+  const high0 = store.get('scores',{})['sky-rush'] || 0;
+  setShell(0, high0);
+  showOverlay('SKY RUSH','Fly through every golden energy ring before time runs out. Dodge grey pylons — one collision ends the flight. Each level raises the ring target and adds obstacles!','START FLIGHT');
+  raf = requestAnimationFrame(loop);
+
+  return {
+    start(){ if(over) resetFlight(); hideOverlay(); pPaused = false; running = true; lastT = performance.now(); },
+    restart(){ resetFlight(); this.start(); },
+    togglePause(){ if(!running && !pPaused) return; pPaused = !pPaused; if(!pPaused){ running = true; lastT = performance.now(); } },
+    setDir(){},
+    key(e){ setKey(e,true); },
+    keyup(e){ setKey(e,false); },
+    stop(){ running = false; if(raf) cancelAnimationFrame(raf); raf = null; },
+    get running(){ return running; }
+  };
+}
+
+/* Input */
+document.addEventListener('keydown', e => {
+  if (currentPage !== 'play' || !currentGame) return;
+  if (currentGame.key){
+    if(e.key.toLowerCase()==='p'){ e.preventDefault(); currentGame.togglePause(); }
+    else if (!currentGame.running && !currentGame.pPaused) { /* keys accepted once running */ currentGame.key(e); }
+    else currentGame.key(e);
+    return;
+  }
+  const map = {ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',w:'up',s:'down',a:'left',d:'right'};
+  const k = map[e.key] || map[e.key.toLowerCase()];
+  if (k){ e.preventDefault(); if (!currentGame.running && !paused) currentGame.start(); else currentGame.setDir(k); }
+});
+document.addEventListener('keyup', e => {
+  if (currentPage === 'play' && currentGame && currentGame.keyup) currentGame.keyup(e);
+});
+document.querySelectorAll('.touch-btn').forEach(b => b.addEventListener('click', () => { if (!currentGame) return; if (!currentGame.running) currentGame.start(); currentGame.setDir(b.dataset.dir); }));
+let tsx=0, tsy=0;
+canvas.addEventListener('touchstart', e => { tsx = e.touches[0].clientX; tsy = e.touches[0].clientY; }, {passive:true});
+canvas.addEventListener('touchend', e => {
+  if (!currentGame) return;
+  const dx = e.changedTouches[0].clientX - tsx, dy = e.changedTouches[0].clientY - tsy;
+  if (Math.abs(dx) < 20 && Math.abs(dy) < 20) return;
+  currentGame.setDir(Math.abs(dx) > Math.abs(dy) ? (dx>0?'right':'left') : (dy>0?'down':'up'));
+}, {passive:true});
+
+/* Boot — run once the DOM is ready; a storage/UI error can never kill the app */
+function boot(){
+  try { syncHearts(); } catch(err){ console.error('syncHearts error:', err); }
+  try { applyFilters(); } catch(err){ console.error('applyFilters error:', err); }
+  try { renderLoginState(); } catch(err){ console.error('renderLoginState error:', err); }
+  try { go('home'); } catch(err){ console.error(err); show('home'); }
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+else boot();
+</script>
+</body>
+</html>
